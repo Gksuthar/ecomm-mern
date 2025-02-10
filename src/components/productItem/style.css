@@ -1,0 +1,9 @@
+.info .title{
+    line-height: 22px;
+}
+.productItem .actions button:hover svg{
+    color: #fff;
+}
+.productItem .actions button svg{
+    pointer-events: none;
+}
