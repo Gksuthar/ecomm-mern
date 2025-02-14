@@ -32,7 +32,7 @@ import axios from "axios";
 import WhichList from "./components/whichlist";
 const MyContext = createContext();
 function App() {
-  const AppUrl = "http://localhost:1000"
+  const AppUrl = "https://mernecommbackend-d6vr.onrender.com"
   const [openCartPanel, setOpenCartPanel] = useState(false);
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
   const [isLogin,setIsLogin] = useState(false);
@@ -45,7 +45,7 @@ function App() {
     const getAllProductCategory=async()=>{
       try {
         const token = localStorage.getItem('accessToken')
-        const response = await axios.get(`http://localhost:1000/api/product`, {
+        const response = await axios.get(`https://mernecommbackend-d6vr.onrender.com/api/product`, {
           headers: {
             Authorization: `Bearer ${token}` // Assuming passToken holds the actual token
           }
