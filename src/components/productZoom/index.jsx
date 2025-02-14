@@ -6,12 +6,15 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
 import { Navigation } from "swiper/modules";
-const ProductZoom = () => {
-  const [selectedImage, setSelectedImage] = useState('https://api.spicezgold.com/download/file_1734529297930_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-2-202307260626.jpg');
-  const [SliderIndex,setSlideIndex] = useState(0);
+import { useEventCallback } from "@mui/material";
+import { useEffect } from "react";
+const ProductZoom = ({data}) => {
+    const filterData = data
+    const [SliderIndex,setSlideIndex] = useState(0);
+    const [selectedImage, setSelectedImage] = useState(`${filterData.images[SliderIndex]}`);
+    
   const zoomSliderBig = useRef();
   const zoomSliderSml = useRef();
-
 
   const goto =(index) =>{
     setSlideIndex(index)
@@ -19,6 +22,12 @@ const ProductZoom = () => {
     zoomSliderBig.current.swiper.slideTo(index)
 
   }
+
+  useEffect(()=>{
+    if (data?.images?.length) {
+        setSelectedImage(data.images[0]); 
+    }
+  },[data])
 
   return (
 
@@ -37,17 +46,18 @@ const ProductZoom = () => {
             >
                 <SwiperSlide>
                     <div  onClick={()=>goto(0)} className={`item rounded-md overflow-hidden cursor-pointer group  ${SliderIndex===0 ? 'opacity-1' : 'opacity-30'}`}>
-                        <img onClick={()=>setSelectedImage('https://api.spicezgold.com/download/file_1734529297930_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-2-202307260626.jpg')} src="https://api.spicezgold.com/download/file_1734529297930_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-2-202307260626.jpg" className="w-full transition-all duration-300 group-hover:scale-105"/>
+                    <img onClick={()=>setSelectedImage(`${filterData.images[0]}`)} src={`${filterData.images[0]}`} className="w-full transition-all duration-300 group-hover:scale-105"/>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                 <div onClick={()=>goto(1)} className={`item rounded-md overflow-hidden cursor-pointer group  ${SliderIndex===1 ? 'opacity-1' : 'opacity-30'}`}>
-                <img onClick={()=>setSelectedImage('https://api.spicezgold.com/download/file_1734529297930_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-1-202307260626.jpg')} src="https://api.spicezgold.com/download/file_1734529297930_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-1-202307260626.jpg" className="w-full transition-all duration-300 group-hover:scale-105"/>
+                <img onClick={()=>setSelectedImage(`${filterData.images[1]}`)} src={`${filterData.images[1]}`} className="w-full transition-all duration-300 group-hover:scale-105"/>
+                
                     </div>
                 </SwiperSlide>
                 <SwiperSlide>
                 <div onClick={()=>goto(2)} className={`item rounded-md overflow-hidden cursor-pointer group  ${SliderIndex===2 ? 'opacity-1' : 'opacity-30'}`}>
-                <img onClick={()=>setSelectedImage  ('https://api.spicezgold.com/download/file_1734529297929_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-0-202307260626.jpg') } src="https://api.spicezgold.com/download/file_1734529297929_fiorra-women-s-teapot-blue-pure-cotton-a-line-kurta-with-sharara-and-dupatta-product-images-rvo9n8udfg-0-202307260626.jpg" className="w-full transition-all duration-300 group-hover:scale-105"/>
+                <img onClick={()=>setSelectedImage(`${filterData.images[2]}`)} src={`${filterData.images[2]}`} className="w-full transition-all duration-300 group-hover:scale-105"/>
                     </div>
                 </SwiperSlide>
             </Swiper>
@@ -60,7 +70,7 @@ const ProductZoom = () => {
                 navigation={false}
             >
                 <SwiperSlide>
-                    <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage}  />
+                <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage} />
                 </SwiperSlide>
             </Swiper>
         </div>

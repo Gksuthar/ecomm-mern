@@ -26,13 +26,75 @@ import ForgetPassword from "./pages/ForgetPassword/index";
 import MyAccount from "./pages/MyAccount/index";
 import MyList from "./pages/MyList/index";
 import Orders from './pages/Orders/index'
+import { useEffect } from "react";
+import Checkout from "./components/checkout/index";
+import axios from "axios";
+import WhichList from "./components/whichlist";
 const MyContext = createContext();
 function App() {
+  const AppUrl = "http://localhost:1000"
   const [openCartPanel, setOpenCartPanel] = useState(false);
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
-  const [isLogin,setIsLogin] = useState(true);
-  const handleOpenProductDetailsModal = () => setOpenProductDetailsModal(true);
-  const handleCloseProductDetailsModal = () =>
+  const [isLogin,setIsLogin] = useState(false);
+  const [UserProfile,setuserProfile] = useState(null)
+  const [allProduct,setAllProduct] = useState([]);
+  const [data,setData] = useState();
+  localStorage.setItem('forgetPassword','true')
+
+  useEffect(()=>{
+    const getAllProductCategory=async()=>{
+      try {
+        const token = localStorage.getItem('accessToken')
+        const response = await axios.get(`http://localhost:1000/api/product`, {
+          headers: {
+            Authorization: `Bearer ${token}` // Assuming passToken holds the actual token
+          }
+        });
+        if (response.status===200) {
+          setAllProduct(response.data.products)
+          // console.log('sdfs'+JSON.stringify(response.data.products));
+        }
+        
+      } catch (error) {
+        console.log("Error :"+error)
+      }
+    }
+    getAllProductCategory()
+  },[])
+
+  // get item on zoom mode
+
+  // const {id} = useParams()
+    const getProductById = async (id) => {
+      try {
+        handleOpenProductDetailsModal(true)
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(`${AppUrl}/api/product/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        if (response.status === 200) {
+          setData(response.data.product); 
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          console.error('Response error:', error.response);
+        } else if (error.request) {
+          console.error('Request error:', error.request);
+        } else {
+          console.error('Error:', error.message);
+        }
+      }
+    };
+  
+
+  const handleOpenProductDetailsModal = () => {
+    setOpenProductDetailsModal(true);
+  }
+    const handleCloseProductDetailsModal = () =>
     setOpenProductDetailsModal(false);
 
 
@@ -53,13 +115,40 @@ function App() {
 
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken') 
+    if (token!==undefined && token!==null && token!=='') {
+        setIsLogin(true)
+        const userDetails=async(req,res)=>{
+          try {
+          const userDetail =await  axios.post(`${AppUrl}/api/user/user-details`,{},{headers:{Authorization: `Bearer ${token}`,'Content-Type': 'application/json'
+          }})
+          // console.log()
+          setuserProfile(userDetail.data.data)
+        } catch (error) {
+          
+          console.error(error)
+        }
+        }
+        userDetails()
+    } else{
+      setIsLogin(false)
+    }
+  }, [isLogin])
+  
+ 
   const values = {
     handleOpenProductDetailsModal,
     openCartPanel,
     setOpenCartPanel,
     openAlertBox,
     isLogin,
-    setIsLogin
+    setIsLogin,
+    AppUrl,
+    UserProfile,
+    allProduct,
+    getProductById
+
   };
   return (
     <>
@@ -75,8 +164,9 @@ function App() {
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/newpassword" element={<ForgetPassword />}></Route>
             <Route path="/my-account" element={<MyAccount />}></Route>
-            <Route path="/myList" element={<MyList />}></Route>
+            <Route path="/myList" element={<WhichList />}></Route>
             <Route path="/orders" element={<Orders />}></Route>
+            <Route path="/checkout" element={<Checkout />}></Route>
             <Route
               path="/productDetails/:id"
               element={<ProductDetails />}
@@ -104,10 +194,11 @@ function App() {
                 <CgClose className="text-[20px] " />
               </Button>
               <div className="col1 w-[40%] ">
-                <ProductZoom />
+                
+                {data && <ProductZoom data={data} />}
               </div>
               <div className="col2 w-[60%] px-10   ml-5 ">
-                <ProductDetailsComponents />
+                {data && <ProductDetailsComponents data={data} />}
               </div>
             </div>
           </Typography>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext,useEffect } from "react";
 import { Button } from "@mui/material";
 import { MdOutlineCloudUpload } from "react-icons/md";
 import { IoBagCheckOutline } from "react-icons/io5";
@@ -7,8 +7,18 @@ import { IoIosLogOut } from "react-icons/io";
 import TextField from "@mui/material/TextField";
 import { FaRegUserCircle } from "react-icons/fa";
 import UserSiteBarManager from "../../components/userSiteBarManager/index";
+import { MyContext } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const MyAccount = () => {
+  const context = useContext(MyContext)
+  const navigate  = useNavigate()
+  useEffect(() => {
+    if (context.isLogin!==true) {
+      navigate('/')
+    }
+  }, [context?.isLogin])
+  
   return (
     <div className="py-10 w-full">
       <div className="container flex gap-5">

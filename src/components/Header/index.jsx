@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../index.css";
 import Search from "../Search";
 import { styled } from "@mui/material/styles";
@@ -17,13 +17,15 @@ import Avatar from '@mui/material/Avatar';
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FaListUl } from "react-icons/fa";
 import { RiLogoutBoxRFill } from "react-icons/ri";
-
+import axios from "axios";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 
 const Header = () => {
   const context = useContext(MyContext);
+  const url = context.AppUrl
+  const navigate = useNavigate()
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
       right: -3,
@@ -32,6 +34,33 @@ const Header = () => {
       padding: "0 4px",
     },
   }));
+  const logout = async () => {
+    try {
+      const response = await axios.post(
+        `${url}/api/user/Logout`, 
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      // Handle successful logout
+      // console.log("Logout successful", response.data);
+      if (response.data.success===true) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        context.setIsLogin(false)
+        context.openAlertBox('success',response.data.message)
+        navigate('/')
+      }
+    } catch (error) {
+      // Handle error
+      console.error("Logout failed", error.response ? error.response.data : error.message);
+    }
+  };
+  
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -81,11 +110,11 @@ const Header = () => {
               <img src="logo-ecomm.jpg" />
             </Link>
           </div>
-          <div className="col2 w-[45%]">
+          <div className="col2 w-[43%] ">
             <Search />
           </div>
-          <div className="col3 w-[30%] flex items-center pl-5 ">
-            <ul className="w-full flex items-center justify-end gap-3 ">
+          <div className="col3 w-[32%] flex items-center pl-5 ">
+            <ul className="w-full flex items-center  justify-end gap-3 ">
               {!context.isLogin ? (
                 <>
                   <li className="list-none">
@@ -106,14 +135,14 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className="classMyAccountwrapper flex items-center gap-3 cursor-pointer">
-                    <Button onClick={handleClick} className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full">
-                      <FaRegUserCircle className="text-[20px] text-[rgba(0,0,0,0.7)]" />
+                  <div className="classMyAccountwrapper flex items-center     cursor-pointer ">
+                    <Button onClick={handleClick} className="!w-[50px] !h-[50px] !min-w-[50px]   !rounded-full">
+                      <FaRegUserCircle className=" text-[20px]  text-[rgba(0,0,0,0.7)]" />
                     </Button>
-                    <div className="info flex flex-col">
-                      <h4 className="text-[14px] !mb-0 font-[500]">Ganesh</h4>
+                    <div className="info flex flex-col justify-end ">
+                      <h4 className="text-[14px] !mb-0 font-[500]">{context?.UserProfile?.name}</h4>
                       <span className="text-[13px] font-[500] text-gray-400">
-                        gkstar434@gmil.com
+                      {context?.UserProfile?.email}
                       </span>
                     </div>
                   </div>
@@ -169,11 +198,9 @@ const Header = () => {
                       <IoIosHeartEmpty className="!text-[18px]"/> List 
                     </MenuItem>
                     </Link>
-                    <Link to='Logout'>
-                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={handleClose}>
+                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={logout}>
                       <RiLogoutBoxRFill className="!text-[18px]"/> Logout 
                     </MenuItem>
-                    </Link>
                     <Divider />
                    
                   </Menu>

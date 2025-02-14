@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ProductZoom from "../../components/productZoom";
 // import Rating from "@mui/material/Rating";
+import { useEffect } from "react";
 import { Button } from "@mui/material";
 import QtyBox from "../../components/QtyBox";
 import Rating from "@mui/material/Rating";
@@ -11,13 +12,49 @@ import ProductsSlider from "../../components/ProductsSlider";
 import { FaRegHeart } from "react-icons/fa";
 import { IoGitCompareOutline } from "react-icons/io5";
 import ProductDetailsComponents from "../../components/ProductsDetails";
+import axios from "axios";
+import { MyContext } from "../../App";
+
 const ProductDetails = () => {
+  const context = useContext(MyContext)
+  const url = context.AppUrl;
   const [productActionIndex, setProActionIndex] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [data,setData]  = useState();
   const setProductActionIndex = (index) => {
     setProActionIndex(index);
     console.log(productActionIndex);
   };
+  
+  const {id} = useParams()
+  useEffect(() => {
+    const getProductById = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(`${url}/api/product/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        if (response.status === 200) {
+          setData(response.data.product); 
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          console.error('Response error:', error.response);
+        } else if (error.request) {
+          console.error('Request error:', error.request);
+        } else {
+          console.error('Error:', error.message);
+        }
+      }
+    };
+  
+    getProductById();
+  }, [id, url]); 
+
   return (
     <>
       <div className="py-5">
@@ -45,11 +82,11 @@ const ProductDetails = () => {
       <section className="bg-white py-5 pl-10">
         <div className="container flex gap-8">
           <div className="productZoomContainer w-[40%] h-[70vh] overflow-hidden">
-            <ProductZoom imageUrl="https://www.jiomart.com/images/cms/aw_rbslider/slides/1738577224_Biryani_banner.jpg?im=Resize=(768,448)" />
+            {data && <ProductZoom data={data} />}
           </div>
           <div className="productContent w-[60%] ">            
 
-          <ProductDetailsComponents/>
+          {data && <ProductDetailsComponents  data={data}/>}
 
         </div>
         </div>

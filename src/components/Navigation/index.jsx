@@ -15,7 +15,7 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className="py-2">
+      <nav className="py-2 ">
         <div className="container flex items-center justify-end gap-8">
           <div className="col_1  w-[20%]">
             <Button
@@ -41,13 +41,35 @@ const Navigation = () => {
                 </Link>
                 <div className="submenu z-50 absolute top-[120%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
                   <ul>
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                          Men
-                        </Button>
-                      </Link>
+                    <li className="list-none w-full group relative">
+                      <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
+                        Men
+                      </Button>
+                      <ul className="absolute left-[100%] top-0 mt-1 hidden w-full bg-white shadow-md group-hover:block">
+                        <li className="list-none w-full">
+                          <Link to="/men/shirts" className="w-full">
+                            <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
+                              Shirts
+                            </Button>
+                          </Link>
+                        </li>
+                        <li className="list-none w-full">
+                          <Link to="/men/pants" className="w-full">
+                            <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
+                              Pants
+                            </Button>
+                          </Link>
+                        </li>
+                        <li className="list-none w-full">
+                          <Link to="/men/shoes" className="w-full">
+                            <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
+                              Shoes
+                            </Button>
+                          </Link>
+                        </li>
+                      </ul>
                     </li>
+
                     <li className="list-none w-full">
                       <Link to="/" className="w-full">
                         <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">

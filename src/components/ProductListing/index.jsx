@@ -9,12 +9,15 @@ import { IoGrid } from "react-icons/io5";
 import { IoMdMenu } from "react-icons/io";
 import ProductItemListView from "../ProductListingListView";
 import Pagination from '@mui/material/Pagination';
+import { useLocation } from "react-router-dom";
 
 const ProductListing = () => {
 const [itmView,setItmView]  = useState('grid');
-
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+const location = useLocation();
+const queryParams = new URLSearchParams(location.search);
+const category = queryParams.get('category');
+const [anchorEl, setAnchorEl] = useState(null);
+const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -43,11 +46,8 @@ const [itmView,setItmView]  = useState('grid');
             <SidebarListning />
           </div>
 
-          {/* Right Content */}
           <div className="w-[80%] py-3">
-            {/* Header Controls */}
             <div className="bg-[#f1f1f1] p-3 mb-4 rounded-md flex items-center justify-between">
-              {/* Left Controls */}
               <div className="flex items-center gap-2 itemViewAction">
                 <Button
                   className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-md bg-gray-200 hover:bg-gray-300 ${itmView==='grid' && 'active'} `} onClick={()=>setItmView('grid')}
@@ -100,14 +100,8 @@ const [itmView,setItmView]  = useState('grid');
             <div className={`grid ${itmView==='grid' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'}  gap-4`}>
               {itmView==='grid' ? (
                 <>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
-                  <ProductItem/>
+                 
+                  {/* <ProductItem/> */}
                 </>
               ) : (
                 <>
