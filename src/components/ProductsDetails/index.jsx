@@ -18,7 +18,7 @@ const ProductDetailsComponents = ({ data }) => {
   const addToCart=async(id)=>{
     try {
       const token = localStorage.getItem('accessToken')
-      const response = await axios.post(`http://localhost:1000/api/cart/create`,{productId:id},{
+      const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/cart/create`,{productId:id},{
         headers:{
           Authorization : `Bearer ${token}`
         }
