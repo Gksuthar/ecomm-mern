@@ -61,7 +61,16 @@ function App() {
       }
     }
     getAllProductCategory()
-  },[])
+  },[]) 
+
+  //  useEffect(() => {
+  //         if (cartData.length > 0) {
+  //             const total = cartData.reduce((acc, item) => acc + (item.productId.oldPrice * item.quantity), 0);
+  //             const totalDiscountPrice = cartData.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0);
+  //             setTotalPrice(parseFloat(total.toFixed(2)));
+  //             setTotalDiscountPrice(parseFloat(totalDiscountPrice.toFixed(2)))
+  //           }
+  //     }, [cartData]);
 
   // get item on zoom mode
 

@@ -64,7 +64,7 @@ const CartPanelData = () => {
               </h4>
               <p className="flex items-center mt-4 mb-4 gap-4">
                 <span>
-                  Qty : <span>1</span>
+                  Qty : <span>{item.quantity}</span>
                 </span>
                 <span className="text-primary font-[500]">Price : {item.productId?.price}</span>
               </p>

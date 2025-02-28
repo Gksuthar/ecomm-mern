@@ -9,6 +9,8 @@ import { MyContext } from "../../App";
 import axios from "axios";
 const ProductDetailsComponents = ({ data }) => {
   const [productActionIndex, setProActionIndex] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+
   const context = useColorScheme(MyContext)
   const url = context.AppUrl
   const setProductActionIndex = (index) => {
@@ -17,8 +19,9 @@ const ProductDetailsComponents = ({ data }) => {
   };
   const addToCart=async(id)=>{
     try {
+      alert((quantity))
       const token = localStorage.getItem('accessToken')
-      const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/cart/create`,{productId:id},{
+      const response = await axios.post(`http://mernecommbackend-d6vr.onrender.com/api/cart/create`,  { productId: id, quantity: quantity },{
         headers:{
           Authorization : `Bearer ${token}`
         }
@@ -111,7 +114,7 @@ const ProductDetailsComponents = ({ data }) => {
 
       <div className="flex items-center mt-4 gap-4">
         <div className="qtyBoxWrapper w-[70px]  ">
-          <QtyBox />
+          <QtyBox qtyValue={quantity} setQtyValue={setQuantity} />
         </div>
         <Button className="btn-org" onClick={()=>addToCart(data?._id)}>ADD TO CART</Button>
       </div>
