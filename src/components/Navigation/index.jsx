@@ -15,7 +15,7 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className="py-2 ">
+      <nav className="py-2 sticky top-0 ">
         <div className="container flex items-center justify-end gap-8">
           <div className="col_1  w-[20%]">
             <Button

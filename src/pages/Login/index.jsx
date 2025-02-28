@@ -80,6 +80,7 @@ const Login = () => {
       
      } catch (error) {
       console.error("Error :"+error)
+      toast('Form SuccessFully Submited.');
      }
 
     }

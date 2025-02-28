@@ -26,7 +26,10 @@ const CartPanelData = () => {
     getCartData();
   }, []);
   console.log(cartData)
-
+  const navigate = useNavigate()
+  const redirectOnCheckout=()=>{
+    navigate('/checkout')
+  }
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(`http://localhost:1000/api/cart/daleteCart`, {
@@ -103,7 +106,7 @@ const CartPanelData = () => {
         <br />
         <div className="container flex items-center justify-between gap-5">
           <Button className="btn-org btn-lg w-[50%]" >View Cart</Button>
-          <Button className="btn-org btn-lg w-[50%]" >Check Out</Button>
+          <Button onClick={redirectOnCheckout} className="btn-org btn-lg w-[50%]" >Check Out</Button>
         </div>
       </div>
     </>

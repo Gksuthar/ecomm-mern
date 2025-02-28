@@ -67,7 +67,6 @@ const Orders = () => {
         </div>
       </div>
 
-      {/* Product Details Modal */}
       <Dialog open={isOpenProductDetails} onClose={handleCloseProductDetails} maxWidth="md" fullWidth>
         <DialogTitle>
           <div className="flex justify-between items-center">

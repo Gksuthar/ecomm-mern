@@ -28,6 +28,7 @@ import MyList from "./pages/MyList/index";
 import Orders from './pages/Orders/index'
 import { useEffect } from "react";
 import Checkout from "./components/checkout/index";
+import 'swiper/css';
 import axios from "axios";
 import WhichList from "./components/whichlist";
 const MyContext = createContext();
@@ -152,7 +153,7 @@ function App() {
   };
   return (
     <>
-      <Router>
+      <>
         <MyContext.Provider value={values}>
           <Header />
           <Routes>
@@ -175,7 +176,7 @@ function App() {
           <Footer />
 
         </MyContext.Provider>
-      </Router>
+      </>
           <Toaster/>
       <Dialog
         open={openProductDetailsModal}
