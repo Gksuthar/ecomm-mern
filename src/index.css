@@ -178,3 +178,16 @@ input::-webkit-inner-spin-button {
     width: 400px;
     overflow: hidden;
 }
+
+.productsInCart::-webkit-scrollbar {
+    width: 8px;
+}
+
+.productsInCart::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); 
+    border-radius: 10px;
+}
+
+.productsInCart::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); 
+}
