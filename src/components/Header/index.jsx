@@ -219,7 +219,7 @@ const Header = () => {
                 </Link>
               </li>
               <li className="list-none">
-                <Link>
+                <Link to='/myList'>
                   <Tooltip title="whilist">
                     <IconButton aria-label="cart">
                       <StyledBadge badgeContent={4} color="secondary">

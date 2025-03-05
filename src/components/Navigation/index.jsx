@@ -1,11 +1,12 @@
 import { Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RiMenu2Fill } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { GoRocket } from "react-icons/go";
 import Sidebar from "./Sidebar";
-
+import { MyContext } from "../../App";
+import { useEffect } from "react";
 const Navigation = () => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const openSidebarFunction = () => {
@@ -13,6 +14,13 @@ const Navigation = () => {
     setIsOpenSidebar(!isOpenSidebar);
   };
 
+  const context = useContext(MyContext)
+  const url  = context.AppUrl
+  const showMenuCategory=async(id,name)=>{
+    // alert(JSON.stringify(context.subCategory))
+    context.toggleCategory(id,name)
+  }
+  
   return (
     <>
       <nav className="py-2 sticky top-0 ">
@@ -29,23 +37,26 @@ const Navigation = () => {
           </div>
 
           <div className="col_2 w-[60%]">
-            <ul className="flex items-center gap-5 nav">
-              <li className="list-none">
+
+            <ul  className="flex items-center gap-5 nav">
+            {context.categoryData && context.categoryData.map((item,indx)=>(
+              <li key={indx} className="list-none relative"  onMouseEnter={() => showMenuCategory(item._id,item.name)}>
                 <Link to="/" className="link transition text-[14px] font-[500]">
-                  Home
+                  {item.name}
                 </Link>
-              </li>
-              <li className="list-none relative">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Fashion
-                </Link>
+                  {
                 <div className="submenu z-50 absolute top-[120%] left-[0%] min-w-[200px] bg-white shadow-md opacity-0 transition-all">
                   <ul>
                     <li className="list-none w-full group relative">
-                      <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                        Men
-                      </Button>
-                      <ul className="absolute left-[100%] top-0 mt-1 hidden w-full bg-white shadow-md group-hover:block">
+                      {context.subCategory.map((item,indx)=>(
+                        <div key={indx}>
+                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
+                          {item.name}
+                        </Button> 
+                        </div>
+                      ))
+                      }
+                       {/* <ul className="absolute left-[100%] top-0 mt-1 hidden w-full bg-white shadow-md group-hover:block">
                         <li className="list-none w-full">
                           <Link to="/men/shirts" className="w-full">
                             <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
@@ -67,71 +78,17 @@ const Navigation = () => {
                             </Button>
                           </Link>
                         </li>
-                      </ul>
-                    </li>
+                      </ul>  */}
+                    </li> 
 
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                          Women
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                          Boy
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                          girls
-                        </Button>
-                      </Link>
-                    </li>
-                    <li className="list-none w-full">
-                      <Link to="/" className="w-full">
-                        <Button className="!text-[rgba(0,0,0,0.8)] w-full !justify-start rounded-none !text-left">
-                          Kids
-                        </Button>
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
+                  
+                  </ul> 
+                 </div>}
               </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Electronics
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Bgas
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Grocery
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Beauty-wellness
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Jawellery
-                </Link>
-              </li>
-              <li className="list-none">
-                <Link to="/" className="link transition text-[14px] font-[500]">
-                  Footwere
-                </Link>
-              </li>
-            </ul>
+              
+            ))  
+          }
+          </ul>
           </div>
           <div className="col_3 w-[20%]">
             <p className="text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">

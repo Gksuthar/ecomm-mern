@@ -9,15 +9,50 @@ import { FaRegUserCircle } from "react-icons/fa";
 import UserSiteBarManager from "../../components/userSiteBarManager/index";
 import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
-
+import { useState } from "react";
+import axios from "axios";
 const MyAccount = () => {
+  const [user,setuser] = useState({name : '',email : '',mobile:''})
   const context = useContext(MyContext)
+  const url = context.AppUrl
   const navigate  = useNavigate()
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setuser((prevUser) => ({
+      // ...prevUser,
+      [name]: value,
+    }));
+  };
+
   useEffect(() => {
-    if (context.isLogin!==true) {
-      navigate('/')
+    if (context.isLogin !== true) {
+      navigate('/');
+    } else {
+      const getUserData = async () => {
+        try {
+          const token = localStorage.getItem('accessToken');
+          const response = await axios.get(`${url}/api/user/user-details`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          });
+          if (response.status===200) {
+            console.log(response.data.data);
+            
+            setuser(response.data.data)
+          }
+          console.log(response.data);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      getUserData(); 
     }
-  }, [context?.isLogin])
+  }, [context?.isLogin]); 
+
+
   
   return (
     <div className="py-10 w-full">
@@ -32,15 +67,21 @@ const MyAccount = () => {
                 <div className="w-[50%]">
                   <TextField
                     label="Full Name"
+                    name="name"
                     className="w-full"
                     size="small"
+                    onChange={handleInputChange}
+                    value={user.name}
                     variant="outlined"
                   />
                 </div>
                 <div className="w-[50%]">
                   <TextField
+                  name="email"
                     label="Email"
                     className="w-full"
+                    value={user.email}
+                    onChange={handleInputChange}
                     size="small"
                     variant="outlined"
                   />
@@ -49,8 +90,12 @@ const MyAccount = () => {
               <div className="flex mt-4 items-center gap-5">
                 <div className="w-[50%]">
                   <TextField
+                  name="mobile"
                     label="Phone Number "
                     className="w-full"
+                    value={user.mobile}
+                    onChange={handleInputChange}
+
                     size="small"
                     variant="outlined"
                   />

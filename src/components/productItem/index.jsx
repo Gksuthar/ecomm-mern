@@ -7,8 +7,29 @@ import { FaRegHeart } from "react-icons/fa6";
 import { GoGitCompare } from "react-icons/go";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { useContext } from "react";
+import axios from "axios";
 import { MyContext } from "../../App";
+import toast, { Toaster } from 'react-hot-toast';
+
 const ProductItem = ({item}) => {
+
+  const addProductInWichList=async(id,rating,price,oldPrice,brand,discount)=>{
+    try {
+      const token = localStorage.getItem('accessToken')
+      const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/mylist/addToMyList`,  { productId: id,rating,price,oldPrice,brand,discount },{
+        headers:{
+          Authorization : `Bearer ${token}`
+        }
+      })
+      if (response.status===201) {
+        toast.success('The prodcut is added in cart')
+        console.log("The prodcut is added in cart")
+      }
+      
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const context  = useContext(MyContext)
   return (
@@ -38,7 +59,7 @@ const ProductItem = ({item}) => {
           <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-primary  !text-black group">
             <GoGitCompare className="text-[18px] text-black" />
           </Button>
-          <Button className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-primary  !text-black group">
+          <Button onClick={()=>addProductInWichList(item._id,item.rating,item.price,item.oldPrice,item.brand,item.discount)} className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-primary  !text-black group">
             <FaRegHeart className="text-[18px] text-black" />
           </Button>
         </div>
