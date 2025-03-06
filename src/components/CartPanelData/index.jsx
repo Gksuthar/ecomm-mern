@@ -1,17 +1,19 @@
 import { Button } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { MyContext } from "../../App";
 
 const CartPanelData = () => {
+  const context = useContext(MyContext)
+  const url = "https://mernecommbackend-d6vr.onrender.com"
   const token = localStorage.getItem('accessToken');
   const [cartData, setCartData] = useState([]);
-
   useEffect(() => {
     const getCartData = async () => {
       try {
-        const response = await axios.get(`http://localhost:1000/api/cart/get`, {
+        const response = await axios.get(`${url}/api/cart/get`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -32,7 +34,7 @@ const CartPanelData = () => {
   }
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:1000/api/cart/daleteCart`, {
+      const response = await axios.delete(`${url}/api/cart/daleteCart`, {
         headers: {
           Authorization: `Bearer ${token}`
         },

@@ -18,7 +18,7 @@ const Verify = () => {
         var ot = parseInt(otp)
         const email = localStorage.getItem('userEmail');
 
-        const response = await axios.post(`http://localhost:1000/api/user/verifyEmail`, { otp:ot, email });
+        const response = await axios.post(`${url}/api/user/verifyEmail`, { otp:ot, email });
         console.log('OTP Response:', response);
 
         if (response.status === 200) {

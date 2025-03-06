@@ -57,7 +57,7 @@ const Home = () => {
           <div className="flex items-center justify-between">
             <div className="lestSec">
               <h2 className="text-[25px] font-[600]">Populer Product</h2>
-              <p className="text-[16px] font-[500]">
+              <p className="text-[16px] font-[500] hidden sm:block">
                 Do not miss the current Offer until end of the March
               </p>
             </div>

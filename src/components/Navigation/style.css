@@ -9,3 +9,29 @@
     visibility: inherit;
     top: 100%;
 }
+
+@media screen and (max-width: 768px) {
+    /* Hide the middle category nav on small screens */
+    .midScreenNav {
+      display: none;
+    }
+  
+    /* Adjust the sidebar button to full width */
+    .col_1 {
+      width: 30%;
+    }
+    .col_2 {
+      width: 70%;
+      overflow-x: scroll;
+    }
+  
+    /* Center the delivery info or hide it */
+    .col_3 {
+      display: none;
+    }
+  
+    nav {
+      padding: 10px 15px;
+    }
+  }
+  

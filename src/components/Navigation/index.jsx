@@ -36,7 +36,7 @@ const Navigation = () => {
             </Button>
           </div>
 
-          <div className="col_2 w-[60%]">
+          <div className="col_2 w-[60%] ">
 
             <ul  className="flex items-center gap-5 nav">
             {context.categoryData && context.categoryData.map((item,indx)=>(

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const BannerBox = ({ img }) => {
   return (
     <div>
-      <div className="group">
+      <div className="group ">
         <div className="box bannerBox overflow-hidden rounded-lg">
           <Link to="/">
             <img
