@@ -17,6 +17,23 @@ const AdsBannerSlider = ({items}) => {
         freeMode={true}
         modules={[Navigation]}
         className="AdvBannerSlider"
+        breakpoints={{
+            0: {
+              slidesPerView: 2,
+            },
+            480: {
+              slidesPerView: 3,
+            },
+            640: {
+              slidesPerView: 4,
+            },
+            768: {
+              slidesPerView: 4,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+          }}
       >
 
         <SwiperSlide>

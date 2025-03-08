@@ -10,7 +10,7 @@ import { IoMdMenu } from "react-icons/io";
 import ProductItemListView from "../ProductListingListView";
 import Pagination from '@mui/material/Pagination';
 import { useLocation } from "react-router-dom";
-
+import CategoryProductListning from "../CategoryProductListning";
 const ProductListing = () => {
 const [itmView,setItmView]  = useState('grid');
 const location = useLocation();
@@ -101,17 +101,11 @@ const open = Boolean(anchorEl);
               {itmView==='grid' ? (
                 <>
                  
-                  {/* <ProductItem/> */}
+                  <CategoryProductListning/>
                 </>
               ) : (
                 <>
                   <ProductItemListView/>
-                  <ProductItemListView/>
-                  <ProductItemListView/>
-                  <ProductItemListView/>
-                  <ProductItemListView/>
-                  <ProductItemListView/>
-                  <ProductItemListView/>  
                 </>
               )
               }

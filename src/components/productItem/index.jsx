@@ -12,11 +12,12 @@ import { MyContext } from "../../App";
 import toast, { Toaster } from 'react-hot-toast';
 
 const ProductItem = ({item}) => {
-
+  const context  = useContext(MyContext)
+  const url = context.AppUrl
   const addProductInWichList=async(id,rating,price,oldPrice,brand,discount)=>{
     try {
       const token = localStorage.getItem('accessToken')
-      const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/mylist/addToMyList`,  { productId: id,rating,price,oldPrice,brand,discount },{
+      const response = await axios.post(`${url}/api/mylist/addToMyList`,  { productId: id,rating,price,oldPrice,brand,discount },{
         headers:{
           Authorization : `Bearer ${token}`
         }
@@ -31,7 +32,6 @@ const ProductItem = ({item}) => {
     }
   }
 
-  const context  = useContext(MyContext)
   return (
     <div className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] shadow-md">
       <div className="group imgWrapper  w-full   rounded-md relative">
@@ -50,7 +50,7 @@ const ProductItem = ({item}) => {
           </div>
           </Link>
         <span className="discount flex items-center absolute top-[10px] left-[10px] z-50 bg-primary text-white rounded-lg p-1 text-[12px] font-[500]">
-          -{item.discount}
+          -{item?.discount}
         </span>
         <div className="actions absolute top-[-20px] right-[5px] z-50 flex items-center gap-2 flex-col w-[50px] transition-all duration-300 group-hover:top-[10px] opacity-0 group-hover:opacity-100 ">
           <Button onClick={()=>context.getProductById(item?._id)} className="!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-white hover:!bg-primary  !text-black group">
@@ -69,14 +69,14 @@ const ProductItem = ({item}) => {
           <Link to="/productListning">{item?.name.substring(0,20)}...</Link>
         </h6>
         <h3 className="text-[13px] title font-[500] text-[#000] link transition-all mb-1">
-          <Link to="/productListning">{item.description.substring(0,30)}...</Link>
+          <Link to="/productListning">{item?.description.substring(0,30)}...</Link>
         </h3>
-        <Rating name="size-small" defaultValue={item.rating} size="small" readOnly />
+        <Rating name="size-small" defaultValue={item?.rating} size="small" readOnly />
         <div className="flex items-center gap-4">
           <span className="price line-through text-gray-500 text-[15 px] font-[600]">
-          ₹:{item.oldPrice}
+          ₹:{item?.oldPrice}
           </span>
-          <span className="newPrice  text-primary font-bold">₹:{item.price}</span>
+          <span className="newPrice  text-primary font-bold">₹:{item?.price}</span>
         </div>
       </div>
     </div>

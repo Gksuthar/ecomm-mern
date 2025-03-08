@@ -7,6 +7,7 @@
     box-sizing: border-box;
 }
 body {
+    
     font-family: "Montserrat", serif;
     font-optical-sizing: auto;
     background: #f5f0f0;
@@ -18,6 +19,11 @@ body {
     margin: auto;
     padding: 4px;
 }
+/* .container {
+    width: 100%;
+    margin: auto;
+    padding: 4px;
+} */
 
 /* header .top-strip {
     border-top: 1px solid rgba(0, 0, 0, 0.1);

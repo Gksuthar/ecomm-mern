@@ -31,7 +31,6 @@ import Checkout from "./components/checkout/index";
 import "swiper/css";
 import axios from "axios";
 import WhichList from "./components/whichlist";
-import { alertTitleClasses } from "@mui/material";
 const MyContext = createContext();
 function App() {
   const AppUrl = "https://mernecommbackend-d6vr.onrender.com";
@@ -40,48 +39,62 @@ function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [UserProfile, setuserProfile] = useState(null);
   const [allProduct, setAllProduct] = useState([]);
+  const [allFeatureProduct, setAllFeatureProduct] = useState([]);
   const [data, setData] = useState();
   localStorage.setItem("forgetPassword", "true");
 
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
+  const [thirdSubCategory, setThirdSubCategory] = useState([]);
+  const [activeSubCategory, setActiveSubCategory] = useState(null);
+  const [loadThristCat,setLoadThirstCat] = useState(false)
+  useEffect(() => {
+    // const loadThristCat=async()=>{
+      console.log('-->'+JSON.stringify(activeSubCategory));
+      
+      if (activeSubCategory) {
+        try {
+          
+          setThirdSubCategory(activeSubCategory.children || []);
+          console.log('i am running on the time ='+JSON.stringify(activeSubCategory.children) )
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  }, [setLoadThirstCat]);
+  
 
   useEffect(() => {
     const getAllProductCategory = async () => {
       try {
         const token = localStorage.getItem("accessToken");
         const response = await axios.get(
-          `https://mernecommbackend-d6vr.onrender.com/api/product`,
+          `${AppUrl}/api/product`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Assuming passToken holds the actual token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
         if (response.status === 200) {
           setAllProduct(response.data.products);
-          // console.log('sdfs'+JSON.stringify(response.data.products));
-        }
+          console.log(allFeatureProduct)
+          setAllFeatureProduct(
+            response.data.products.filter((item) => item.isFeatured===true)
+          );
+                  }
       } catch (error) {
         console.log("Error :" + error);
       }
     };
     getAllProductCategory();
+
+
+
+
   }, []);
 
-  //  useEffect(() => {
-  //         if (cartData.length > 0) {
-  //             const total = cartData.reduce((acc, item) => acc + (item.productId.oldPrice * item.quantity), 0);
-  //             const totalDiscountPrice = cartData.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0);
-  //             setTotalPrice(parseFloat(total.toFixed(2)));
-  //             setTotalDiscountPrice(parseFloat(totalDiscountPrice.toFixed(2)))
-  //           }
-  //     }, [cartData]);
-
-  // get item on zoom mode
-
-  // const {id} = useParams()
   const getProductById = async (id) => {
     try {
       handleOpenProductDetailsModal(true);
@@ -157,13 +170,11 @@ function App() {
   }, [isLogin]);
 
   const toggleCategory = async (categoryId, name) => {
-    // alert("categoryId ->"+name)
     setOpenCategoryId(openCategoryId === categoryId ? null : categoryId);
     try {
       const response = await axios.get(`${AppUrl}/api/routerCategory/`);
       if (response.status === 200) {
         const categories = response.data.data;
-
         const selectedCategory = categories.find(
           (item) => item._id === categoryId
         );
@@ -171,6 +182,8 @@ function App() {
         if (selectedCategory) {
           const subCategories = selectedCategory.children || [];
           setSubCategory(subCategories);
+
+
         } else {
           setSubCategory([]);
         }
@@ -212,6 +225,11 @@ function App() {
     setCategoryData,
     subCategory,
     setSubCategory,
+    thirdSubCategory,
+    setLoadThirstCat,
+    setActiveSubCategory,
+    loadThristCat,
+    allFeatureProduct
   };
   return (
     <>
@@ -223,7 +241,7 @@ function App() {
             <Route path="/Login" element={<Login />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
             <Route path="/Register" element={<Register />}></Route>
-            <Route path="/productListning" element={<ProductListing />}></Route>
+            <Route path="/productListning/:category" element={<ProductListing />}></Route>
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/newpassword" element={<ForgetPassword />}></Route>
             <Route path="/my-account" element={<MyAccount />}></Route>

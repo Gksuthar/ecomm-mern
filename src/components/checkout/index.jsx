@@ -162,11 +162,11 @@ const Checkout = () => {
           <div className="productsInCart h-[100vh] mt-3 gap-2 overflow-y-scroll">
             {cartData.map((item, index) => (
               <div key={index} className="relative container shadow-md flex border mb-3 ">
-                <div className="image w-[10%] h-[150px] flex justify-center items-center">
+                <div className="image w-[30%] h-[150px] flex justify-center items-center">
                   <img src={item.productId.images[0]} alt={item.productId.name} />
                 </div>
                 <div className="description mt-4 ml-4">
-                  <h2 className="text-[14px] font-[500]">{item.productId.name}</h2>
+                  <h2 className="text-[14px] font-[500] mr-10">{item.productId.name}</h2>
                   <p className="text-[12px] font-[400]">
                     {item.productId.description.substring(0, 200)}...
                   </p>

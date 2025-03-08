@@ -105,16 +105,16 @@ const Header = () => {
 
       <div className="header py-4  border-b-[1px]">
         <div className="container flex items-center justify-between">
-          <div className="col1 w-[25%]">
-            <Link to="/">
+        <div className="hidden sm:block sm:w-[25%]">
+        <Link to="/">
               <img src="logo-ecomm.jpg" />
             </Link>
           </div>
           <div className="col2 w-[43%] ">
             <Search />
           </div>
-          <div className="col3 w-[32%] flex items-center pl-5 ">
-            <ul className="w-full flex items-center  justify-end gap-3 ">
+          <div className="col3 sm:w-[32%] w-[30%]  flex items-center pl-5 ">
+            <ul className="w-full flex items-center  justify-end gap-1 sm:gap-3 ">
               {!context.isLogin ? (
                 <>
                   <li className="list-none">
@@ -135,11 +135,11 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className="classMyAccountwrapper flex items-center     cursor-pointer ">
+                  <div className="  classMyAccountwrapper flex items-center     cursor-pointer ">
                     <Button onClick={handleClick} className="!w-[50px] !h-[50px] !min-w-[50px]   !rounded-full">
                       <FaRegUserCircle className=" text-[20px]  text-[rgba(0,0,0,0.7)]" />
                     </Button>
-                    <div className="info flex flex-col justify-end ">
+                    <div className="hidden sm:block info flex flex-col justify-end ">
                       <h4 className="text-[14px] !mb-0 font-[500]">{context?.UserProfile?.name}</h4>
                       <span className="text-[13px] font-[500] text-gray-400">
                       {context?.UserProfile?.email}

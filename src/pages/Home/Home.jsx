@@ -14,6 +14,7 @@ import ProductsSlider from "../../components/ProductsSlider";
 import BlogItem from "../../components/BlogItem";
 import AdsBannerSliderV2 from "../../components/AdsBannerSliderV2";
 import { useState } from "react";
+import FeatureProduct from "../../components/FeautureProduct";
 const Home = () => {
   const [value, setValue] = useState(0);
   const [selectedTab, setSelectedTab] = useState("Fashion"); 
@@ -28,7 +29,7 @@ const Home = () => {
       <HomeSlider />
       <CategorySlider />
 
-      <section className="py-16 bg-white">
+      <section className="sm:py-16 py-6 bg-white">
         <div className="container">
           <div className="freShipping w-full p-4 border border-[red] rounded-md py-4 flex items-center justify-between mb-7">
             <div className="col1 flex items-center gap-4">
@@ -44,7 +45,7 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="col3">
+            <div className="hidden sm:block col3">
               <p className="font-bold text-[25px] uppercase">- Only $200*</p>
             </div>
           </div>
@@ -99,7 +100,7 @@ const Home = () => {
         <div className="container">
           <h2 className="text-[25px] font-[600]">Feature Product</h2>
         </div>
-        <ProductsSlider items={6} />
+        <FeatureProduct items={6} />
         <div className="container">
           <AdsBannerSliderV2 items={3} />
         </div>
