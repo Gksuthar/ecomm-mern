@@ -1,8 +1,9 @@
 import { Button, CircularProgress, Typography } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { MyContext } from '../../App';
 import { IoMdClose } from "react-icons/io";
+import AddressForm from '../UserAddress';
 
 const Checkout = () => {
   const [cartData, setCartData] = useState([]);
@@ -10,6 +11,10 @@ const Checkout = () => {
   const [totalSellingPrice, setTotalSellingPrice] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [deliveryAddress, setDeliveryAddress] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const addressFormRef = useRef(null); 
 
   const PLATFORM_CHARGE = 100;
   const SHIPPING_CHARGE = 100;
@@ -19,6 +24,7 @@ const Checkout = () => {
 
   const finalAmount = Math.round(totalSellingPrice + PLATFORM_CHARGE + SHIPPING_CHARGE);
 
+  // Fetch cart data
   useEffect(() => {
     const getCartData = async () => {
       try {
@@ -53,6 +59,7 @@ const Checkout = () => {
     }
   }, [cartData]);
 
+  // Load Razorpay script
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
@@ -67,20 +74,45 @@ const Checkout = () => {
     });
   };
 
+  // Handle payment process
   const handlePayment = async () => {
-    const res = await loadRazorpayScript();
+    setPaymentLoading(true); // Start payment loading
 
-    if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
+    // If the address form is visible, submit it first
+    if (showAddressForm && addressFormRef.current) {
+      const isFormValid = await addressFormRef.current.submitForm();
+      if (!isFormValid) {
+        alert('Please fill out the address form correctly.');
+        setPaymentLoading(false); // Stop payment loading
+        return;
+      }
+    }
+
+    if (!deliveryAddress) {
+      
+      alert('Please add a delivery address before proceeding.');
+      setPaymentLoading(false); // Stop payment loading
       return;
     }
+
+    // Load Razorpay script
+    const res = await loadRazorpayScript();
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      setPaymentLoading(false); 
+      return;
+    }
+
     try {
       const { data } = await axios.post(
         `${url}/api/order/makeOrder`,
-        { amount: finalAmount },
+        { 
+          amount: finalAmount
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      // Razorpay payment options
       const options = {
         key: 'rzp_test_KRIIvltHQ0dIqz',
         amount: data.amount,
@@ -90,16 +122,11 @@ const Checkout = () => {
         order_id: data.id,
         handler: async (response) => {
           try {
-            if (cartData.length > 1) {
-              console.log('Second cart item ID:', cartData[0]._id);
-            } else {
-              console.log('No second item in cartData.');
-            }
-
-            const verifyResponse = await axios.post(
+            await axios.post(
               `${url}/api/order/verify`,
               {
                 amount: finalAmount,
+                delivery_address: deliveryAddress.data._id,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
@@ -124,33 +151,48 @@ const Checkout = () => {
         },
       };
 
+      // Open Razorpay payment modal
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (err) {
       console.error(err);
       alert('Something went wrong during payment!');
+    } finally {
+      setPaymentLoading(false); // Stop payment loading
     }
   };
+
+  // Handle item deletion from cart
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem('accessToken')
+      const token = localStorage.getItem('accessToken');
       const response = await axios.delete(`${url}/api/cart/daleteCart`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        data : { _id: id }
+        data: { _id: id },
       });
       if (response.status === 200) {
-        setCartData(cartData.filter(item => item._id !== id));
+        setCartData(cartData.filter((item) => item._id !== id));
       }
     } catch (error) {
-      console.log("Error deleting item:", error);
+      console.log('Error deleting item:', error);
     }
   };
+
+  // Handle address submission
+  const handleAddressSubmit = (address) => {
+    // console.log('---'+JSON.stringify(address.data._id ))
+    setDeliveryAddress(address); // Save the address
+    setShowAddressForm(false); // Hide the form after submission
+  };
+
+  // Show loading spinner if data is being fetched
   if (loading) {
     return <CircularProgress />;
   }
 
+  // Show error message if there's an error
   if (error) {
     return <Typography color="error">{error}</Typography>;
   }
@@ -158,12 +200,13 @@ const Checkout = () => {
   return (
     <div className="py-4">
       <div className="container w-[100%] flex bg-white gap-3">
+        {/* Left Section: Cart Items */}
         <div className="w-[70%] flex flex-col">
           <div className="productsInCart h-[100vh] mt-3 gap-2 overflow-y-scroll">
             {cartData.map((item, index) => (
-              <div key={index} className="relative container shadow-md flex border mb-3 ">
-                <div className="image w-[30%] h-[150px] flex justify-center items-center">
-                  <img src={item.productId.images[0]} alt={item.productId.name} />
+              <div key={index} className="relative container shadow-md flex border mb-3">
+                <div className="image w-[10%] mt-2 h-[100px] flex justify-center items-center">
+                  <img src={item.productId.images[0]} alt={item.productId.name} className='mt-2' />
                 </div>
                 <div className="description mt-4 ml-4">
                   <h2 className="text-[14px] font-[500] mr-10">{item.productId.name}</h2>
@@ -180,41 +223,78 @@ const Checkout = () => {
                   </div>
                   <h4 className="font-[600] text-[12px]">Not Returnable</h4>
                 </div>
-                <Button onClick={()=>handleDelete(item._id)} className='max-h-8 h-8 !w-6 !min-w-8 !rounded-full !absolute !top-2 !right-2 hover:!bg-gray-300 !text-black hover:!text-white '>
-                  <IoMdClose className='text-2xl'/>
+                <Button
+                  onClick={() => handleDelete(item._id)}
+                  className="max-h-8 h-8 !w-6 !min-w-8 !rounded-full !absolute !top-2 !right-2 hover:!bg-gray-300 !text-black hover:!text-white"
+                >
+                  <IoMdClose className="text-2xl" />
                 </Button>
               </div>
             ))}
           </div>
         </div>
-        <div className="placeOrder w-[30%] h-[50vh] mt-[100px] px-2 border border-[rgba(0,0,0,0.2)] shadow-md">
-          <div className="container">
-            <h2 className="text-[14px] font-[600]">Price Details</h2>
-            <hr />
-            <div className="flex justify-between mb-3">
-              <p>Total MRP</p>
-              <span>₹ {totalMrp}</span>
+
+        {/* Right Section: Price Details and Address Form */}
+        <div className="w-[30%] flex flex-col gap-4">
+          {/* Price Details */}
+          <div className="placeOrder h-[50vh] mt-[100px] px-2 border border-[rgba(0,0,0,0.2)] shadow-md">
+            <div className="container">
+              <h2 className="text-[14px] font-[600]">Price Details</h2>
+              <hr />
+              <div className="flex justify-between mb-3">
+                <p>Total MRP</p>
+                <span>₹ {totalMrp}</span>
+              </div>
+              <div className="flex justify-between mb-3">
+                <p>Discounted Price</p>
+                <span>₹ {totalSellingPrice}</span>
+              </div>
+              <div className="flex justify-between mb-3">
+                <p>Platform Charges</p>
+                <span>₹ {PLATFORM_CHARGE}</span>
+              </div>
+              <div className="flex justify-between mb-3">
+                <p>Shipping Charges</p>
+                <span>₹ {SHIPPING_CHARGE}</span>
+              </div>
+              <hr />
+              <div className="flex justify-between mb-3">
+                <p>Total Amount</p>
+                <span>₹ {finalAmount}</span>
+              </div>
+              <Button
+                className="btn-org w-full"
+                onClick={handlePayment}
+                disabled={paymentLoading} // Disable button during payment loading
+              >
+                {paymentLoading ? 'Processing...' : 'PLACE ORDER'}
+              </Button>
             </div>
-            <div className="flex justify-between mb-3">
-              <p>Discounted Price</p>
-              <span>₹ {totalSellingPrice}</span>
-            </div>
-            <div className="flex justify-between mb-3">
-              <p>Platform Charges</p>
-              <span>₹ {PLATFORM_CHARGE}</span>
-            </div>
-            <div className="flex justify-between mb-3">
-              <p>Shipping Charges</p>
-              <span>₹ {SHIPPING_CHARGE}</span>
-            </div>
-            <hr />
-            <div className="flex justify-between mb-3">
-              <p>Total Amount</p>
-              <span>₹ {finalAmount}</span>
-            </div>
-            <Button className="btn-org w-full" onClick={handlePayment}>
-              PLACE ORDER
+          </div>
+
+          <div className="addressForm">
+            <Button
+              className="btn-org w-full"
+              onClick={() => setShowAddressForm(!showAddressForm)}
+            >
+              {showAddressForm ? 'Hide Address Form' : deliveryAddress ? 'Edit Address' : 'Add Address'}
             </Button>
+            {/* Show saved address if available */}
+            {!showAddressForm && deliveryAddress && (
+              <div className="mt-4 p-4 border border-gray-200 rounded">
+                <Typography variant="body1">Saved Address:</Typography>
+                <Typography variant="body2">
+                  {deliveryAddress.address_line}, {deliveryAddress.city}, {deliveryAddress.state}, {deliveryAddress.pincode}
+                </Typography>
+              </div>
+            )}
+            {/* Show AddressForm only if showAddressForm is true */}
+            {showAddressForm && (
+              <AddressForm
+                ref={addressFormRef}
+                onSubmit={handleAddressSubmit}
+              />
+            )}
           </div>
         </div>
       </div>

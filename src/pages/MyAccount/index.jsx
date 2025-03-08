@@ -11,6 +11,7 @@ import { MyContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import AddressForm from "../../components/UserAddress";
 const MyAccount = () => {
   const [user,setuser] = useState({name : '',email : '',mobile:''})
   const context = useContext(MyContext)
@@ -108,7 +109,10 @@ const MyAccount = () => {
               </div>
             </form>
           </div>
+
+
         </div>
+          
       </div>
     </div>
   );

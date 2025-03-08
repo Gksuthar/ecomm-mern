@@ -34,20 +34,26 @@ const Orders = () => {
     const getOrder = async () => {
       try {
         const token = localStorage.getItem('accessToken');
+        console.log('Token:', token);  // Check if token exists
+        console.log('API URL:', url);  // Confirm URL is correct
+
         const response = await axios.get(`${url}/api/order/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
+
         if (response.status === 200) {
-          setOrders(response.data.data);
+          console.log('API Response:', response.data.data);
+          setOrders(response.data.data)
         }
       } catch (error) {
-        console.error(error);
+        console.error('Error Message:', error.message);         // Detailed error message
       }
     };
     getOrder();
   }, []);
+
 
   return (
     <div className="py-10 w-full">
@@ -88,13 +94,13 @@ const Orders = () => {
                       </Button>
                     </td>
                     <td className="px-6 py-4">{item.userId.name}</td>
-                    <td className="px-6 py-4">{item.userId.phone}</td>
-                    <td className="px-6 py-4">123 Main St</td>
-                    <td className="px-6 py-4">123456</td>
-                    <td className="px-6 py-4">$2999</td>
+                    <td className="px-6 py-4">{item.delivery_address.mobile}</td>
+                    <td className="px-6 py-4">{item.delivery_address.address_line}</td>
+                    <td className="px-6 py-4">{item.delivery_address.pincode}</td>
+                    <td className="px-6 py-4">{item.productId.price}</td>
                     <td className="px-6 py-4">{item.userId.email}</td>
                     <td className="px-6 py-4">Delivered</td>
-                    <td className="px-6 py-4">2023-10-01</td>
+                    <td className="px-6 py-4">{item.createdAt}</td>
                   </tr>
                 ))}
               </tbody>
