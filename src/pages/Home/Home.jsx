@@ -64,7 +64,7 @@ const Home = () => {
                 Do not miss the current Offer until end of the March
               </p>
             </div>
-            <div className="rightSec w-[100%] sm:w-[60%] flex justify-end">
+            <div className="rightSecreenCat w-auto overflow-x-scroll  sm:w-[60%] flex sm:justify-end">
              {context.categoryData &&
              context.categoryData.map((item,indx)=>(
                <Tabs
@@ -74,7 +74,6 @@ const Home = () => {
                textColor="primary"
                indicatorColor="primary "
                variant="scrollable"
-                scrollButtons="auto"
                 sx={{
                   backgroundColor: selectedTab === item.name ? "#f0f0f0" : "transparent",
                   borderRadius: "8px",

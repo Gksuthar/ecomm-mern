@@ -201,3 +201,6 @@ input::-webkit-inner-spin-button {
 .productsInCart::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.1); 
 }
+/* .rightSecreenCat{
+    overflow: scroll;
+} */

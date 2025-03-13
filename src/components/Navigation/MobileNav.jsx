@@ -1,6 +1,8 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { IoHomeOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
+import { CiHeart } from "react-icons/ci";
 
 const MobileNav = () => {
   return (
@@ -16,14 +18,14 @@ const MobileNav = () => {
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"
         disableRipple
       >
-        <IoHomeOutline size={20} className="mb-1" />
+        <IoSearchOutline  size={20} className="mb-1" />
         <span className="text-[14px] leading-none">Search</span>
       </Button>
       <Button
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"
         disableRipple
       >
-        <IoHomeOutline size={20} className="mb-1" />
+        <CiHeart size={20} className="mb-1" />
         <span className="text-[14px] leading-none">WhichLst</span>
       </Button>
       <Button
