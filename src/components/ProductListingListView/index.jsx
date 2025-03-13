@@ -10,19 +10,29 @@ import { IoCartOutline } from "react-icons/io5";
 import { MyContext } from "../../App";
 import { useEffect } from "react";
 import { useState } from "react";
+import Pagination from '@mui/material/Pagination';
+
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-
-import { useParams } from "react-router-dom";
-const ProductItemListView = () => {
-    const {category} = useParams();
+const ProductItemListView = ({category}) => {
+    // const {category} = useParams();
    const [filteredProducts, setFilteredProducts] = useState([]);
     const context = useContext(MyContext);
     const url = context.AppUrl
+    const productsPerPage = 3;
+
+    const [currentPage,setCurrentPage] = useState(1)
+
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+    const startIndex = (currentPage - 1) * productsPerPage;
+    const paginatedProducts = filteredProducts.slice(startIndex,startIndex+productsPerPage)
+    const handlePageChange = (event, value) => {
+      setCurrentPage(value);
+    };
     useEffect(() => {
       if (context.allProduct && category) {
           const result = context.allProduct.filter(
-            (pro) => pro.subCat === category
+            (pro) => pro.thirdSubCat === category
   
           );
           setFilteredProducts(result);
@@ -73,12 +83,12 @@ const ProductItemListView = () => {
   
       return (
         <>
-        {filteredProducts &&
-          filteredProducts.map((item, indx) => (
+        {paginatedProducts &&
+          paginatedProducts.map((item, indx) => (
         <div key={indx} className="productItem rounded-sm border border-[rgba(0,0,0,0.1)] shadow-md flex">
             <div  className="flex w-full">
-              <div className="group h-[200px] imgWrapper w-[25%] rounded-md relative overflow-hidden">
-                <Link to="/">
+              <div className="group h-[200px] imgWrapper w-[18%] rounded-md relative overflow-hidden">
+                <Link to={``}>
                   <div className="h-full w-full relative">
                     <img
                       src={item.images[0]}
@@ -110,7 +120,7 @@ const ProductItemListView = () => {
                   </Button>
                 </div>
               </div>
-              <div className="info w-[75%] p-3 px-8 py-3 bg-[#ecebeb]">
+              <div className="info w-[82%] p-3 px-8 py-3 bg-[#ecebeb]">
                 <h6 className="text-[15px] text-left">
                   <Link to="/">{item.name.substring(0, 100)}...</Link>
                 </h6>
@@ -137,6 +147,11 @@ const ProductItemListView = () => {
             </div>
       </div>
           ))}
+            <div className="flex items-center justify-end mt-10">
+              <Pagination count={totalPages} page={currentPage}  onChange={handlePageChange} />
+              {/* <Pagination count={totalPages} page={currentPage} onChange={se} color="primary" /> */}
+
+            </div>
         </>
       
       );

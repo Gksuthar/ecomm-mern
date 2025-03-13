@@ -9,26 +9,25 @@
   import axios from "axios";
   import toast, { Toaster } from 'react-hot-toast';
 
-  const ProductDetailsComponents = ({ data }) => {
+  const ProductDetailsComponents = ({ data,length }) => {
     const [productActionIndex, setProActionIndex] = useState(null);
     const [quantity, setQuantity] = useState(1);
-
     // const context = useContext(MyContext)
     // const url = context.AppUrl
     const setProductActionIndex = (index) => {
       setProActionIndex(index);
-      console.log(productActionIndex);
     };
     const addToCart=async(id)=>{
+      
       try {
         const token = localStorage.getItem('accessToken')
-        const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/cart/create`,  { productId: id,quantity },{
+        const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/cart/create`,   {productId:id,quantity: quantity} ,{
           headers:{
             Authorization : `Bearer ${token}`
           }
         })
         if (response.status===200) {
-          toast.success(resposne.data.message)
+          toast.success(response.data.message)
 
         }
         
@@ -67,7 +66,7 @@
           </span>
           <Rating name="size-small" value={data?.rating?? 0 } size="small" readOnly />
           <span className="text-[13px] cursor-pointer text-gray-400">
-            Review (5)
+            Review ({length})
           </span>
         </div>
         <div className="flex items-center gap-4 mt-4">
@@ -93,40 +92,21 @@
 
         <div className="flex items-center gap-2 mt-3">
           <span className="text-[13px] font-[600]">Size :</span>
-          <div className="flex items-center gap-2 actions ">
-            <Button
-              onClick={() => setProductActionIndex(0)}
-              className={`${
-                productActionIndex === 0 ? "!bg-primary !text-white" : ""
-              }  !text-[12px] !h-[30px] !w-[30px] !min-w-[30px]   `}
-            >
-              S
-            </Button>
-            <Button
-              onClick={() => setProductActionIndex(1)}
-              className={`${
-                productActionIndex === 1 ? "!bg-primary !text-white" : ""
-              }  !text-[12px] !h-[30px] !w-[30px] !min-w-[30px]  `}
-            >
-              M
-            </Button>
-            <Button
-              onClick={() => setProductActionIndex(2)}
-              className={`${
-                productActionIndex === 2 ? "!bg-primary !text-white" : ""
-              }  !text-[12px] !h-[30px] !w-[30px] !min-w-[30px]  `}
-            >
-              L
-            </Button>
-            <Button
-              onClick={() => setProductActionIndex(3)}
-              className={`${
-                productActionIndex === 3 ? "!bg-primary !text-white" : ""
-              }  !text-[12px] !h-[30px] !w-[20px] !min-w-[20px!] `}
-            >
-              XL
-            </Button>
-          </div>
+          <div className="flex items-center gap-2 actions  ">
+          {data.size.map((item, index) => (
+  <Button
+    key={index}
+    onClick={() => setProductActionIndex(index)}
+    className={`${
+      productActionIndex === index ? "!bg-primary !text-white" : ""
+    } !text-[12px] !px-1 !h-[30px] !w-[40px] !min-w-[40px] `}
+  >
+    {item}
+  </Button>
+))}
+
+</div>
+
         </div>
         <p className="mb-2 mt-4 text-[12px] text-gray-400">
           Free Shipping (Est. Delivery Time 2-3 Days)

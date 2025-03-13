@@ -30,6 +30,7 @@ import { useEffect } from "react";
 import Checkout from "./components/checkout/index";
 import "swiper/css";
 import axios from "axios";
+import { jsPDF } from "jspdf";
 import WhichList from "./components/whichlist";
 const MyContext = createContext();
 function App() {
@@ -42,22 +43,20 @@ function App() {
   const [allFeatureProduct, setAllFeatureProduct] = useState([]);
   const [data, setData] = useState();
   localStorage.setItem("forgetPassword", "true");
-
+  const [cartLen,setCartLen] = useState(0)
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [thirdSubCategory, setThirdSubCategory] = useState([]);
   const [activeSubCategory, setActiveSubCategory] = useState(null);
   const [loadThristCat,setLoadThirstCat] = useState(false)
+  const [windowWidth,setWindowWidth] = useState(window.innerWidth)  
+  
   useEffect(() => {
-    // const loadThristCat=async()=>{
-      console.log('-->'+JSON.stringify(activeSubCategory));
-      
       if (activeSubCategory) {
         try {
           
           setThirdSubCategory(activeSubCategory.children || []);
-          console.log('i am running on the time ='+JSON.stringify(activeSubCategory.children) )
         } catch (error) {
           console.error(error);
         }
@@ -90,9 +89,13 @@ function App() {
     };
     getAllProductCategory();
 
-
-
-
+    const handleResize = ()=>{
+      setWindowWidth(window.innerWidth)
+    }
+    window.addEventListener("resize",handleResize)
+    return ()=>{
+      window.removeEventListener("resize",handleResize)
+    }
   }, []);
 
   const getProductById = async (id) => {
@@ -207,6 +210,12 @@ function App() {
     fetchCategory();
   }, [AppUrl]);
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Hello, this is a sample PDF!", 10, 10);
+    doc.save("sample.pdf");
+  };
+      
   const values = {
     handleOpenProductDetailsModal,
     openCartPanel,
@@ -229,7 +238,9 @@ function App() {
     setLoadThirstCat,
     setActiveSubCategory,
     loadThristCat,
-    allFeatureProduct
+    allFeatureProduct,
+    windowWidth,
+    downloadPDF
   };
   return (
     <>
@@ -245,6 +256,7 @@ function App() {
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/newpassword" element={<ForgetPassword />}></Route>
             <Route path="/my-account" element={<MyAccount />}></Route>
+            {/* <Route path="/productListing/:category" component={CategoryProductListning} /> */}
             <Route path="/myList" element={<WhichList />}></Route>
             <Route path="/orders" element={<Orders />}></Route>
             <Route path="/checkout" element={<Checkout />}></Route>
@@ -286,13 +298,13 @@ function App() {
       {/*Cart Panel  */}
       <Drawer open={openCartPanel} anchor="right" className="cartBar">
         <div className="flex items-center gap-3 py-3 px-5 justify-between text-[15px] font-[500] border-b border-[rgba(0,0,0,0.2)]">
-          <h4 className="">Shopping Cart (2)</h4>
+          <h4 className="">Shopping Cart ({cartLen})</h4>
           <IoMdClose
             onClick={toggleCartPanel(false)}
             className="text-[20px] cursor-pointer"
           />
         </div>
-        <CartPanelData />
+        <CartPanelData lenghtOfCart={setCartLen} />
       </Drawer>
     </>
   );

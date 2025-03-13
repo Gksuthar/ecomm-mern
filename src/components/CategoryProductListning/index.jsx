@@ -12,34 +12,37 @@ import { MyContext } from "../../App";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 import { useState } from "react";
+import Pagination from "@mui/material/Pagination";
 
-const CategoryProductListning = () => {
-//   const location = useLocation();
-//   const queryParams = new URLSearchParams(location.search);
-//   let category = queryParams.get("category");
-
-const {category} = useParams();
-
-
-
+const CategoryProductListning = ({ category }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const context = useContext(MyContext);
+  const [currentPage,setCurrentPage] = useState(1)
+  const productsPerPage = 6;
+  
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex,startIndex+productsPerPage)
+
 
   useEffect(() => {
-    //  let val = category
     if (context.allProduct && category) {
-        const result = context.allProduct.filter(
-          (pro) => pro.subCat === category
-
-        );
-        setFilteredProducts(result);
-      }
-      
-    }, [category, context.allProduct]); 
-
+      const result = context.allProduct.filter(
+        (pro) => pro.thirdSubCat === category
+      );
+      setFilteredProducts(result);
+    }
+  }, [category, context.allProduct]);
 
   const url = context.AppUrl;
-  const addProductInWichList = async (id, rating, price, oldPrice, brand, discount) => {
+  const addProductInWichList = async (
+    id,
+    rating,
+    price,
+    oldPrice,
+    brand,
+    discount
+  ) => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
@@ -59,13 +62,16 @@ const {category} = useParams();
       console.error(error);
     }
   };
-  console.log(filteredProducts  );
+  console.log(filteredProducts);
 
+  const handlePageChange=(e,value)=>{ 
+    setCurrentPage(value)
+  }
 
   return (
     <>
-      { filteredProducts.length > 0 ? (
-        filteredProducts.map((product) => (
+      {paginatedProducts.length > 0 ? (
+        paginatedProducts.map((product) => (
           <div
             key={product._id}
             className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] shadow-md"
@@ -138,11 +144,15 @@ const {category} = useParams();
               </div>
             </div>
           </div>
-        ))):
-            (
-                <p>No products found.</p>
-              )
-            }
+        ))
+      ) : (
+        <p>No products found.</p>
+      )}
+      <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
+      />
     </>
   );
 };

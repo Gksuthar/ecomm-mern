@@ -46,7 +46,6 @@ const AddressForm = forwardRef((props, ref) => {
       });
 
       if (response.status === 201) {
-        alert("Address saved successfully!");
         props.onSubmit(response.data); 
         setFormData({
           address_line: "",

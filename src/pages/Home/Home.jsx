@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import HomeSlider from "../../components/HomeSlider";
 import CategorySlider from "../../components/CatSlider";
 import { TbTruckDelivery } from "react-icons/tb";
@@ -15,6 +15,7 @@ import BlogItem from "../../components/BlogItem";
 import AdsBannerSliderV2 from "../../components/AdsBannerSliderV2";
 import { useState } from "react";
 import FeatureProduct from "../../components/FeautureProduct";
+import { MyContext } from "../../App";
 const Home = () => {
   const [value, setValue] = useState(0);
   const [selectedTab, setSelectedTab] = useState("Fashion"); 
@@ -23,6 +24,7 @@ const Home = () => {
     setSelectedTab(event.target.textContent)
     setValue(newValue);
   };
+  const context = useContext(MyContext)
 
   return (
     <div>
@@ -55,33 +57,35 @@ const Home = () => {
 
       <section className="bg-white py-8">
         <div className="container">
-          <div className="flex items-center justify-between">
-            <div className="lestSec">
+        <div className="flex flex-col sm:flex-row items-center justify-between">
+        <div className="lestSec">
               <h2 className="text-[25px] font-[600]">Populer Product</h2>
-              <p className="text-[16px] font-[500] hidden sm:block">
+              <p className="text-[16px] font-[500] ">
                 Do not miss the current Offer until end of the March
               </p>
             </div>
-            <div className="rightSec w-[60%] flex justify-end">
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                textColor="primary"
-                indicatorColor="primary "
-                variant="scrollable"
+            <div className="rightSec w-[100%] sm:w-[60%] flex justify-end">
+             {context.categoryData &&
+             context.categoryData.map((item,indx)=>(
+               <Tabs
+               key={indx}
+               value={item.name}
+               onChange={handleChange}
+               textColor="primary"
+               indicatorColor="primary "
+               variant="scrollable"
                 scrollButtons="auto"
-              >
-                <Tab label="Fashion" />
-                <Tab label="Electronics" />
-                <Tab label="Beauty" />
-                <Tab label="Groceries" />
-                <Tab label="Footwear" />
-                <Tab label="Bags" />
-                <Tab label="Beauty" />
-                <Tab label="Groceries" />
-                <Tab label="Footwear" />
-                <Tab label="Bags" />
+                sx={{
+                  backgroundColor: selectedTab === item.name ? "#f0f0f0" : "transparent",
+                  borderRadius: "8px",
+                }}
+        
+                >
+                <Tab label={item.name} />
               </Tabs>
+                ))
+              }
+             
             </div>
           </div>
         </div>

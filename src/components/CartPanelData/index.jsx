@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { MyContext } from "../../App";
 
-const CartPanelData = () => {
+const CartPanelData = ({lenghtOfCart}) => {
   const context = useContext(MyContext)
   const url = "https://mernecommbackend-d6vr.onrender.com"
   const token = localStorage.getItem('accessToken');
@@ -20,6 +20,7 @@ const CartPanelData = () => {
         });
         if (response.status === 200) {
           setCartData(response.data.data);
+          lenghtOfCart(response.data.data.length);
         }
       } catch (error) {
         console.log("Error fetching cart data:", error);
@@ -42,6 +43,7 @@ const CartPanelData = () => {
       });
       if (response.status === 200) {
         setCartData(cartData.filter(item => item._id !== id));
+        lenghtOfCart((item)=>item-1) 
       }
     } catch (error) {
       console.log("Error deleting item:", error);
@@ -62,13 +64,14 @@ const CartPanelData = () => {
             </div>
             <div className="info w-[70%] relative">
               <h4 className="text-[13px] w-[90%] font-[500]">
-                {item.productId?.name}
+                {item.productId?.name.substring(0,50)}...
               </h4>
               <p className="flex items-center mt-4 mb-4 gap-4">
                 <span>
                   Qty : <span>{item.quantity}</span>
                 </span>
-                <span className="text-primary font-[500]">Price : {item.productId?.price}</span>
+                <span className="font-[500]">Price  {item.productId?.price}</span>
+                <span className="text-primary font-[500]">TotalPrice  {item.productId?.price*item.quantity}</span>
               </p>
 
               <MdOutlineDeleteOutline 

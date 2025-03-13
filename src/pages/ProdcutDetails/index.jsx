@@ -2,22 +2,25 @@ import React, { useContext, useState } from "react";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link, useParams } from "react-router-dom";
 import ProductZoom from "../../components/productZoom";
-// import Rating from "@mui/material/Rating";
 import { useEffect } from "react";
 import { Button } from "@mui/material";
-import QtyBox from "../../components/QtyBox";
 import Rating from "@mui/material/Rating";
 import TextField from "@mui/material/TextField";
 import ProductsSlider from "../../components/ProductsSlider";
-import { FaRegHeart } from "react-icons/fa";
-import { IoGitCompareOutline } from "react-icons/io5";
 import ProductDetailsComponents from "../../components/ProductsDetails";
 import axios from "axios";
 import { MyContext } from "../../App";
+import toast, { Toaster } from 'react-hot-toast';
 
 const ProductDetails = () => {
   const context = useContext(MyContext);
   const url = context.AppUrl;
+  const [allReview,setAllReview] = useState([])
+  const [rating, setRating] = useState(4);
+  const [review, setReview] = useState('');
+  const [totalReview, setTotalReview] = useState(0);
+
+
   const [productActionIndex, setProActionIndex] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [data, setData] = useState();
@@ -28,15 +31,15 @@ const ProductDetails = () => {
 
   const { id } = useParams();
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
     const getProductById = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
         const response = await axios.get(`${url}/api/product/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        
         if (response.status === 200) {
           setData(response.data.product);
         }
@@ -51,10 +54,77 @@ const ProductDetails = () => {
         }
       }
     };
-
+    
     getProductById();
   }, [id, url]);
+  
 
+  const token = localStorage.getItem('accessToken');
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+  
+  
+    if (!review.trim()) {
+      alert("Please write a review before submitting.");
+      return;
+    }
+  
+    try {
+      const response = await axios.post(
+        `${url}/api/review/create-review`,
+        { productId: id, comment: review, rating },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 201) {
+        toast.success('Your review has been saved successfully!')
+        setReview(''); 
+        setRating(4);  
+        setAllReview((prevReviews) => [
+          ...prevReviews,
+          { productId: id, comment: review, rating, createdAt: new Date().toISOString() }
+        ]);
+        setTotalReview((prev)=>prev+1)
+        
+  
+
+      } else {
+        alert("Failed to submit the review. Please try again.");
+      }
+    } catch (error) {
+      if (error.response) {
+        alert(`Error: ${error.response.data.message || 'Something went wrong.'}`);
+      } else if (error.request) {
+        alert("Network error. Please check your internet connection.");
+      } else {
+        console.error("Error:", error.message);
+        alert("An unexpected error occurred.");
+      }
+    }
+  };
+    useEffect(() => {
+      const getAllReviewFromDb=async()=>{
+        try {
+          const response = await axios.get(`${url}/api/review/product-reviews/${id}`,{
+            headers:{
+              Authorization:`Bearer ${token}`
+            }
+          })
+          if (response.status===200) {
+            setAllReview(response.data);
+            setTotalReview(response.data.length)
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      getAllReviewFromDb()
+    },[])
+    
   return (
     <>
       <div className="py-5">
@@ -99,7 +169,7 @@ const ProductDetails = () => {
               {data && <ProductZoom data={data} />}
             </div>
             <div className="productContent  sm:w-[60%]">
-              {data && <ProductDetailsComponents data={data} />}
+              {data && <ProductDetailsComponents data={data} length={totalReview}  />}
             </div>
           </div>
         </div>
@@ -225,7 +295,9 @@ const ProductDetails = () => {
                 </h2>
 
                 <div className="w-full max-h-[350px] overflow-y-auto">
-                  <div className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
+                  { allReview.map((item,indx)=>(
+
+                    <div key={indx} className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
                     <div className="w-[60%] flex items-center gap-2">
                       <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
                         <img
@@ -236,96 +308,26 @@ const ProductDetails = () => {
                       </div>
                       <div className="w-[80%]">
                         <h4 className="text-[16px] font-[500] mt-3">
-                          Ganesh Suthar
+                          {item.userId?.name}
                         </h4>
                         <h5 className="text-[12px] text-gray-400 font-[500]">
                           2025-09-29
                         </h5>
                         <p className="text-[12px] font-[400] mt-2 mb-4">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
+                          {item.comment}
                         </p>
                       </div>
                     </div>
-                    <Rating name="size-small" defaultValue={4} readOnly />
+                    <Rating name="size-small" value={item.rating} readOnly />
                   </div>
-                  <div className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
-                    <div className="w-[60%] flex items-center gap-2">
-                      <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
-                        <img
-                          src="https://www.shutterstock.com/image-photo/paris-france-june-3-2017-260nw-657978760.jpg"
-                          className="w-full"
-                          alt="User"
-                        />
-                      </div>
-                      <div className="w-[80%]">
-                        <h4 className="text-[16px] font-[500] mt-3">
-                          Ganesh Suthar
-                        </h4>
-                        <h5 className="text-[12px] text-gray-400 font-[500]">
-                          2025-09-29
-                        </h5>
-                        <p className="text-[12px] font-[400] mt-2 mb-4">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
-                        </p>
-                      </div>
-                    </div>
-                    <Rating name="size-small" defaultValue={4} readOnly />
-                  </div>
-                  <div className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
-                    <div className="w-[60%] flex items-center gap-2">
-                      <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
-                        <img
-                          src="https://www.shutterstock.com/image-photo/paris-france-june-3-2017-260nw-657978760.jpg"
-                          className="w-full"
-                          alt="User"
-                        />
-                      </div>
-                      <div className="w-[80%]">
-                        <h4 className="text-[16px] font-[500] mt-3">
-                          Ganesh Suthar
-                        </h4>
-                        <h5 className="text-[12px] text-gray-400 font-[500]">
-                          2025-09-29
-                        </h5>
-                        <p className="text-[12px] font-[400] mt-2 mb-4">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
-                        </p>
-                      </div>
-                    </div>
-                    <Rating name="size-small" defaultValue={4} readOnly />
-                  </div>
-                  <div className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
-                    <div className="w-[60%] flex items-center gap-2">
-                      <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
-                        <img
-                          src="https://www.shutterstock.com/image-photo/paris-france-june-3-2017-260nw-657978760.jpg"
-                          className="w-full"
-                          alt="User"
-                        />
-                      </div>
-                      <div className="w-[80%]">
-                        <h4 className="text-[16px] font-[500] mt-3">
-                          Ganesh Suthar
-                        </h4>
-                        <h5 className="text-[12px] text-gray-400 font-[500]">
-                          2025-09-29
-                        </h5>
-                        <p className="text-[12px] font-[400] mt-2 mb-4">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
-                        </p>
-                      </div>
-                    </div>
-                    <Rating name="size-small" defaultValue={4} readOnly />
-                  </div>
+                        ))
+                        }
+                 
                   <br />
                 </div>
                 <div className="reviewForm bg-[#fafafa] p-4 mt-1 ">
                   <h2 className="text-[18px] font-[600] mb-3 ">Add a review</h2>
-                  <form action="">
+                  <form onSubmit={handleSubmitReview}>
                     <TextField
                       id="outlined-multiline-flexible"
                       label="Write a Review"
@@ -333,12 +335,16 @@ const ProductDetails = () => {
                       multiline
                       rows={5}
                       variant="filled"
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+
                     />
                     <br />
                     <br />
-                    <Rating name="size-small" defaultValue={4} />
+                    <Rating name="size-small" value={rating} onChange={(event, newValue) => setRating(newValue)}
+ />
                     <div className="flex items-center justify-center ">
-                      <Button className="btn-org transition-all duration-300 ease-in-out  ">
+                      <Button type="submit" className="btn-org transition-all duration-300 ease-in-out  ">
                         Submit Review
                       </Button>{" "}
                     </div>

@@ -43,6 +43,7 @@ const Login = () => {
         context.openAlertBox("success", "Login successfully");
         context.setIsLogin(true)
         localStorage.setItem('accessToken',response.data.data.accessToken)
+        localStorage.setItem('userId',response.data.data._id)
         localStorage.setItem('refreshToken',response.data.data.refreshToken)
         navigate("/");
       } else {

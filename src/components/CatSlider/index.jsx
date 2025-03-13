@@ -47,7 +47,7 @@ const CategorySlider = () => {
           </SwiperSlide>
 
           <SwiperSlide>
-            <Link to="/productListning">
+            <Link to="/productListning/T-Shirts">
               <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/12-cz_categoryimagelist.jpg"
@@ -73,7 +73,7 @@ const CategorySlider = () => {
           </SwiperSlide>
 
           <SwiperSlide>
-            <Link to="/">
+            <Link to="/productListning/Chair">
               <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/15-cz_categoryimagelist.jpg"
@@ -99,7 +99,7 @@ const CategorySlider = () => {
           </SwiperSlide>
 
           <SwiperSlide>
-            <Link to="/">
+            <Link to="/productListning/Purse">
               <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/17-cz_categoryimagelist.jpg"

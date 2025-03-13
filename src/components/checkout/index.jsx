@@ -59,7 +59,6 @@ const Checkout = () => {
     }
   }, [cartData]);
 
-  // Load Razorpay script
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       if (window.Razorpay) {
@@ -74,45 +73,41 @@ const Checkout = () => {
     });
   };
 
-  // Handle payment process
   const handlePayment = async () => {
-    setPaymentLoading(true); // Start payment loading
-
-    // If the address form is visible, submit it first
-    if (showAddressForm && addressFormRef.current) {
-      const isFormValid = await addressFormRef.current.submitForm();
-      if (!isFormValid) {
-        alert('Please fill out the address form correctly.');
-        setPaymentLoading(false); // Stop payment loading
+    setPaymentLoading(true);
+  
+    try {
+      if (showAddressForm && addressFormRef.current) {
+        const isFormValid = await addressFormRef.current.submitForm();
+        if (!isFormValid) {
+          alert('Please fill out the address form correctly.');
+          setPaymentLoading(false);
+          return;
+        }
+      }
+  
+      if (!deliveryAddress) {
+        alert('Please add a delivery address before proceeding.');
+        setPaymentLoading(false);
         return;
       }
-    }
-
-    if (!deliveryAddress) {
-      
-      alert('Please add a delivery address before proceeding.');
-      setPaymentLoading(false); // Stop payment loading
-      return;
-    }
-
-    // Load Razorpay script
-    const res = await loadRazorpayScript();
-    if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
-      setPaymentLoading(false); 
-      return;
-    }
-
-    try {
+  
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert('Razorpay SDK failed to load. Are you online?');
+        setPaymentLoading(false);
+        return;
+      }
+  
       const { data } = await axios.post(
         `${url}/api/order/makeOrder`,
-        { 
-          amount: finalAmount
-        },
+        { amount: finalAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // Razorpay payment options
+  
+      // productId: cartData[0].productId._id,
+      //             Quantity: cartData[0].quantity,
+  
       const options = {
         key: 'rzp_test_KRIIvltHQ0dIqz',
         amount: data.amount,
@@ -130,11 +125,13 @@ const Checkout = () => {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
-                cartData: cartData,
+                // cartData: cartData.map(item => ({
+                  cartData: cartData,
+                  // Quantity: cartData[0].quantity,
+                // }))
               },
               { headers: { Authorization: `Bearer ${token}` } }
             );
-
             alert('Payment Successful!');
           } catch (error) {
             console.error('Error verifying payment:', error.response || error.message);
@@ -150,15 +147,14 @@ const Checkout = () => {
           color: '#F37254',
         },
       };
-
-      // Open Razorpay payment modal
+  
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
     } catch (err) {
       console.error(err);
       alert('Something went wrong during payment!');
     } finally {
-      setPaymentLoading(false); // Stop payment loading
+      setPaymentLoading(false);
     }
   };
 
@@ -173,6 +169,7 @@ const Checkout = () => {
         data: { _id: id },
       });
       if (response.status === 200) {
+        
         setCartData(cartData.filter((item) => item._id !== id));
       }
     } catch (error) {
@@ -180,19 +177,15 @@ const Checkout = () => {
     }
   };
 
-  // Handle address submission
   const handleAddressSubmit = (address) => {
-    // console.log('---'+JSON.stringify(address.data._id ))
-    setDeliveryAddress(address); // Save the address
-    setShowAddressForm(false); // Hide the form after submission
+    setDeliveryAddress(address);
+    setShowAddressForm(false); 
   };
 
-  // Show loading spinner if data is being fetched
   if (loading) {
     return <CircularProgress />;
   }
 
-  // Show error message if there's an error
   if (error) {
     return <Typography color="error">{error}</Typography>;
   }
@@ -200,15 +193,20 @@ const Checkout = () => {
   return (
     <div className="py-4">
       <div className="container w-[100%] flex bg-white gap-3">
-        {/* Left Section: Cart Items */}
         <div className="w-[70%] flex flex-col">
           <div className="productsInCart h-[100vh] mt-3 gap-2 overflow-y-scroll">
             {cartData.map((item, index) => (
               <div key={index} className="relative container shadow-md flex border mb-3">
-                <div className="image w-[10%] mt-2 h-[100px] flex justify-center items-center">
-                  <img src={item.productId.images[0]} alt={item.productId.name} className='mt-2' />
-                </div>
-                <div className="description mt-4 ml-4">
+      <div className="image w-3/7 mt-2 h-[100px] flex justify-start items-center overflow-hidden">
+    <img 
+      src={item.productId?.images?.[0] || '/path/to/default-image.jpg'} 
+      alt={item.productId?.name || 'Product Image'} 
+      className='h-full w-auto object-contain rounded-md'
+    />
+</div>
+
+
+                <div className="description w-4/7 mt-4 ml-4">
                   <h2 className="text-[14px] font-[500] mr-10">{item.productId.name}</h2>
                   <p className="text-[12px] font-[400]">
                     {item.productId.description.substring(0, 200)}...
@@ -220,6 +218,7 @@ const Checkout = () => {
                     <p>₹ {item.productId.price}</p>
                     <p className="line-through">₹ {item.productId.oldPrice}</p>
                     <span className="text-green-400">{item.productId.discount}%</span>
+                    <span className="text-black">Qty : {item.quantity}</span>
                   </div>
                   <h4 className="font-[600] text-[12px]">Not Returnable</h4>
                 </div>
@@ -234,9 +233,7 @@ const Checkout = () => {
           </div>
         </div>
 
-        {/* Right Section: Price Details and Address Form */}
         <div className="w-[30%] flex flex-col gap-4">
-          {/* Price Details */}
           <div className="placeOrder h-[50vh] mt-[100px] px-2 border border-[rgba(0,0,0,0.2)] shadow-md">
             <div className="container">
               <h2 className="text-[14px] font-[600]">Price Details</h2>
@@ -279,7 +276,6 @@ const Checkout = () => {
             >
               {showAddressForm ? 'Hide Address Form' : deliveryAddress ? 'Edit Address' : 'Add Address'}
             </Button>
-            {/* Show saved address if available */}
             {!showAddressForm && deliveryAddress && (
               <div className="mt-4 p-4 border border-gray-200 rounded">
                 <Typography variant="body1">Saved Address:</Typography>
@@ -288,7 +284,6 @@ const Checkout = () => {
                 </Typography>
               </div>
             )}
-            {/* Show AddressForm only if showAddressForm is true */}
             {showAddressForm && (
               <AddressForm
                 ref={addressFormRef}

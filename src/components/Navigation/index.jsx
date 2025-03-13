@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import { GoRocket } from "react-icons/go";
 import Sidebar from "./Sidebar";
 import { MyContext } from "../../App";
+import MobileNav from "./MobileNav";
+import './style.css'
+import { GoDownload } from "react-icons/go";
 
 const Navigation = () => {
   const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
@@ -27,9 +30,9 @@ const Navigation = () => {
 
   return (
     <>
-      <nav className="py-2 sticky top-0 bg-white z-50 ">
-        <div className="container flex items-center justify-end gap-8">
-          <div className="col_1 w-[20%]">
+      <nav className="py-2 sticky top-0  w-full bg-white z-50 ">
+        <div className="container    flex items-center justify-end gap-8">
+          <div className="hidden sm:block col_1 sm:w-[20%]">
             <Button
               className="!text-black gap-2 w-full"
               onClick={openSidebarFunction}
@@ -41,7 +44,7 @@ const Navigation = () => {
             </Button>
           </div>
 
-          <div className="col_2 w-[60%]">
+          <div className="col_2 !w-[100%] sm:w-[60%]">
             <ul className="flex items-center gap-5 nav">
               {context.categoryData &&
                 context.categoryData.map((item, indx) => (
@@ -75,7 +78,7 @@ const Navigation = () => {
 
                             {activeSubCategory &&
                               activeSubCategory._id === subItem._id && (
-                                <ul className="absolute left-full top-0 mt-0 bg-white shadow-md min-w-[200px] z-50">
+                                <ul className="absolute  top-0 left-[100%]  mt-0 bg-white shadow-md min-w-[200px] z-50">
                                   {subItem.children.map(
                                     (thirdItem, thirdIndx) => (
                                       <li
@@ -114,11 +117,13 @@ const Navigation = () => {
           </div>
         </div>
       </nav>
-
       <Sidebar
         openSidebarFunction={openSidebarFunction}
         isOpenSidebar={isOpenSidebar}
-      />
+        />
+        {    
+          context.windowWidth<992 && <MobileNav/>
+        }
     </>
   );
 };

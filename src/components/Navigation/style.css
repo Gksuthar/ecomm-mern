@@ -1,3 +1,4 @@
+
 .categoryPanel button{
     text-transform: capitalize !important;
 }
@@ -9,6 +10,13 @@
     visibility: inherit;
     top: 100%;
 }
+.mobileNav {
+  z-index: 1000 !important;
+}
+
+
+
+
 
 @media screen and (max-width: 768px) {
     /* Hide the middle category nav on small screens */

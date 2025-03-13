@@ -8,6 +8,8 @@ import DialogActions from '@mui/material/DialogActions';
 import { IoMdClose } from "react-icons/io";
 import axios from 'axios';
 import { MyContext } from '../../App';
+import { GoDownload } from "react-icons/go";
+
 
 const Orders = () => {
   const [isOpenProductDetails, setIsOpenProductDetails] = useState(false);
@@ -78,6 +80,7 @@ const Orders = () => {
                   <th className="px-6 py-3">Email</th>
                   <th className="px-6 py-3">Order Status</th>
                   <th className="px-6 py-3">Date</th>
+                  <th className="px-6 py-3">Download</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,6 +104,7 @@ const Orders = () => {
                     <td className="px-6 py-4">{item.userId.email}</td>
                     <td className="px-6 py-4">Delivered</td>
                     <td className="px-6 py-4">{item.createdAt}</td>
+                    <td className="px-6 py-4  flex justify-center items-center "><GoDownload onClick={context.downloadPDF} className='cursor-pointer text-[20px]' /></td>
                   </tr>
                 ))}
               </tbody>

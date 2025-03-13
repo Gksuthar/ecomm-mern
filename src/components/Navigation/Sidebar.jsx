@@ -10,10 +10,8 @@ import axios from "axios";
 import { MyContext } from "../../App";
 
 const Sidebar = ({ openSidebarFunction, isOpenSidebar,fetchCategory }) => {
-
   const  context = useContext(MyContext);
   const url = context.AppUrl
-
 
   return (
     <Drawer anchor="left" open={isOpenSidebar} onClose={openSidebarFunction}>

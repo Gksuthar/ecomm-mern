@@ -9,16 +9,16 @@ import { IoGrid } from "react-icons/io5";
 import { IoMdMenu } from "react-icons/io";
 import ProductItemListView from "../ProductListingListView";
 import Pagination from '@mui/material/Pagination';
-import { useLocation } from "react-router-dom";
 import CategoryProductListning from "../CategoryProductListning";
+import { useParams } from "react-router-dom";
 const ProductListing = () => {
 const [itmView,setItmView]  = useState('grid');
-const location = useLocation();
-const queryParams = new URLSearchParams(location.search);
-const category = queryParams.get('category');
+// const location = useLocation();
+// const queryParams = new URLSearchParams(location.search);
+// const category = queryParams.get('category');
 const [anchorEl, setAnchorEl] = useState(null);
 const open = Boolean(anchorEl);
-
+  const {category} = useParams()
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -101,18 +101,16 @@ const open = Boolean(anchorEl);
               {itmView==='grid' ? (
                 <>
                  
-                  <CategoryProductListning/>
+                  <CategoryProductListning category={category}/>
                 </>
               ) : (
                 <>
-                  <ProductItemListView/>
+                  <ProductItemListView category={category}/>
                 </>
               )
               }
             </div>
-            <div className="flex items-center justify-center mt-10">
-              <Pagination count={10} />
-            </div>
+           
           </div>
 
         </div>

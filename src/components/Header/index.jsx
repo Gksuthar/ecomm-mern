@@ -13,7 +13,7 @@ import Navigation from "../Navigation/index";
 import { MyContext } from "../../App";
 import { Button } from "@mui/material";
 import { FaRegUserCircle } from "react-icons/fa";
-import Avatar from '@mui/material/Avatar';
+import Avatar from "@mui/material/Avatar";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { FaListUl } from "react-icons/fa";
 import { RiLogoutBoxRFill } from "react-icons/ri";
@@ -21,11 +21,12 @@ import axios from "axios";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
+import { AiOutlineMenu } from "react-icons/ai";
 
 const Header = () => {
   const context = useContext(MyContext);
-  const url = context.AppUrl
-  const navigate = useNavigate()
+  const url = context.AppUrl;
+  const navigate = useNavigate();
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
       right: -3,
@@ -37,8 +38,8 @@ const Header = () => {
   const logout = async () => {
     try {
       const response = await axios.post(
-        `${url}/api/user/Logout`, 
-        {}, 
+        `${url}/api/user/Logout`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -48,19 +49,21 @@ const Header = () => {
       );
       // Handle successful logout
       // console.log("Logout successful", response.data);
-      if (response.data.success===true) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
-        context.setIsLogin(false)
-        context.openAlertBox('success',response.data.message)
-        navigate('/')
+      if (response.data.success === true) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        context.setIsLogin(false);
+        context.openAlertBox("success", response.data.message);
+        navigate("/");
       }
     } catch (error) {
       // Handle error
-      console.error("Logout failed", error.response ? error.response.data : error.message);
+      console.error(
+        "Logout failed",
+        error.response ? error.response.data : error.message
+      );
     }
   };
-  
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -73,7 +76,7 @@ const Header = () => {
 
   return (
     <header className="bg-white">
-      <div className="top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px]">
+      <div className="hidden sm:block  top-strip py-2 border-t-[1px] border-gray-250 border-b-[1px]">
         <div className="container">
           <div className="flex items-center justify-between">
             <div className="col1 w-[50%]">
@@ -105,15 +108,19 @@ const Header = () => {
 
       <div className="header py-4  border-b-[1px]">
         <div className="container flex items-center justify-between">
-        <div className="hidden sm:block sm:w-[25%]">
-        <Link to="/">
+          <div className="sm:hidden flex items-center justify-start w-[33%]">
+            <AiOutlineMenu className="text-2xl" />
+          </div>
+
+          <div className="w-[33%] sm:w-[25%]">
+            <Link to="/">
               <img src="logo-ecomm.jpg" />
             </Link>
           </div>
-          <div className="col2 w-[43%] ">
+          <div className="hidden sm:block col2 w-[33%] sm:w-[43%] ">
             <Search />
           </div>
-          <div className="col3 sm:w-[32%] w-[30%]  flex items-center pl-5 ">
+          <div className="col3 sm:w-[32%]  w-[33%]  flex items-center pl-5 ">
             <ul className="w-full flex items-center  justify-end gap-1 sm:gap-3 ">
               {!context.isLogin ? (
                 <>
@@ -135,14 +142,19 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className="  classMyAccountwrapper flex items-center     cursor-pointer ">
-                    <Button onClick={handleClick} className="!w-[50px] !h-[50px] !min-w-[50px]   !rounded-full">
+                  <div className=" hidden sm:block  classMyAccountwrapper flex items-center     cursor-pointer ">
+                    <Button
+                      onClick={handleClick}
+                      className="!w-[50px] !h-[50px] !min-w-[50px]   !rounded-full"
+                    >
                       <FaRegUserCircle className=" text-[20px]  text-[rgba(0,0,0,0.7)]" />
                     </Button>
                     <div className="hidden sm:block info flex flex-col justify-end ">
-                      <h4 className="text-[14px] !mb-0 font-[500]">{context?.UserProfile?.name}</h4>
+                      <h4 className="text-[14px] !mb-0 font-[500]">
+                        {context?.UserProfile?.name}
+                      </h4>
                       <span className="text-[13px] font-[500] text-gray-400">
-                      {context?.UserProfile?.email}
+                        {context?.UserProfile?.email}
                       </span>
                     </div>
                   </div>
@@ -183,31 +195,42 @@ const Header = () => {
                     transformOrigin={{ horizontal: "right", vertical: "top" }}
                     anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   >
-                    <Link to='/my-account'>
-                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={handleClose}>
-                      <FaRegUserCircle className="!text-[18px]"/> My Account
-                    </MenuItem>
+                    <Link to="/my-account">
+                      <MenuItem
+                        className="flex gap-2 !text-[14px] !py-2"
+                        onClick={handleClose}
+                      >
+                        <FaRegUserCircle className="!text-[18px]" /> My Account
+                      </MenuItem>
                     </Link>
-                    <Link to='/orders'>
-                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={handleClose}>
-                      <IoBagCheckOutline className="!text-[18px]"/> Orders 
-                    </MenuItem>
+                    <Link to="/orders">
+                      <MenuItem
+                        className="flex gap-2 !text-[14px] !py-2"
+                        onClick={handleClose}
+                      >
+                        <IoBagCheckOutline className="!text-[18px]" /> Orders
+                      </MenuItem>
                     </Link>
-                    <Link to='/myList'>
-                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={handleClose}>
-                      <IoIosHeartEmpty className="!text-[18px]"/> List 
-                    </MenuItem>
+                    <Link to="/myList">
+                      <MenuItem
+                        className="flex gap-2 !text-[14px] !py-2"
+                        onClick={handleClose}
+                      >
+                        <IoIosHeartEmpty className="!text-[18px]" /> List
+                      </MenuItem>
                     </Link>
-                    <MenuItem className="flex gap-2 !text-[14px] !py-2" onClick={logout}>
-                      <RiLogoutBoxRFill className="!text-[18px]"/> Logout 
+                    <MenuItem
+                      className="flex gap-2 !text-[14px] !py-2"
+                      onClick={logout}
+                    >
+                      <RiLogoutBoxRFill className="!text-[18px]" /> Logout
                     </MenuItem>
                     <Divider />
-                   
                   </Menu>
                 </>
               )}
 
-              <li>
+              <li className="hidden sm:block ">
                 <Link to="/compare">
                   <Tooltip title="Compare">
                     <IconButton aria-label="cart">
@@ -218,8 +241,8 @@ const Header = () => {
                   </Tooltip>
                 </Link>
               </li>
-              <li className="list-none">
-                <Link to='/myList'>
+              <li className="list-none hidden sm:block ">
+                <Link to="/myList">
                   <Tooltip title="whilist">
                     <IconButton aria-label="cart">
                       <StyledBadge badgeContent={4} color="secondary">

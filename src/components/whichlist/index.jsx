@@ -6,6 +6,7 @@ import {MyContext} from '../../App.jsx'
 import { MdOutlineClose } from "react-icons/md";
 import { Button } from "@mui/material";
 import toast, { Toaster } from 'react-hot-toast';
+import { Link } from "react-router-dom";
 
 const Wishlist = () => {
   const context = useContext(MyContext)
@@ -22,7 +23,7 @@ const Wishlist = () => {
           }
         })
         if (response.status===200) {
-          console.log(response.data.data)
+          console.log('---->'+JSON.stringify(response.data.data))
           setWichListData(response.data.data)
         }
       } catch (error) {
@@ -60,7 +61,7 @@ const Wishlist = () => {
 
         <h1 className="text-2xl font-bold mb-4 ">My Wishlist ({wichListData.length})</h1>
         <div className="space-y-4 ">
-          {  Array.isArray(wichListData) && wichListData.map((item,indx)=>(
+          {Array.isArray(wichListData) && wichListData.map((item,indx)=>(
 
           <div key={indx} className="flex border p-2 rounded-lg shadow-sm ">
             <div className="w-24 h-24  ">
@@ -72,7 +73,8 @@ const Wishlist = () => {
               />
               </div>
             <div className="ml-4 flex-1">
-              <h2 className="text-lg font-semibold">{item.productId?.name}</h2>
+        
+              <Link to={`/productDetails/${item.productId._id}`}><h2 className="text-lg font-semibold hover:text-primary transition-all duration-300">{item.productId?.name}</h2></Link>
               <p className="text-sm text-gray-600">{item.productId?.description.substring(0,120)}...</p>
               <div className="mt-2">
                 <span className="text-lg font-bold">₹ {item.price}
@@ -85,7 +87,7 @@ const Wishlist = () => {
                 </span>
               </div>
             </div>
-            <Button onClick={()=>removeWhichListItem(item._id)}className="!min-w-0 !w-8 !h-8 !p-0 !text-black !rounded-full  hover:!bg-gray-300">
+            <Button onClick={()=>removeWhichListItem(item._id)}className="!min-w-0 !w-8 !h-8 !p-0 !text-black !rounded-full hover:!bg-gray-500  hover:!text-white ">
             <MdOutlineClose className="text-2xl "/>
               </Button>
           </div>
