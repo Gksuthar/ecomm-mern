@@ -33,6 +33,7 @@ const MobileNav = () => {
         <CiHeart size={20} className="mb-1" />
         <span className="text-[14px] leading-none">WhichLst</span>
       </Button>
+      <Link to='/orders'>
       <Button
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"
         disableRipple
@@ -40,13 +41,16 @@ const MobileNav = () => {
         <IoBagOutline size={20} className="mb-1" />
         <span className="text-[14px] leading-none">Orders</span>
       </Button>
+      </Link>
+      <Link to='/my-account'>
       <Button
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"
         disableRipple
-      >
+        >
         <RiAccountBox2Line size={20} className="mb-1" />
         <span className="text-[14px] leading-none">Account</span>
       </Button>
+      </Link>
     </div>
   );
 };

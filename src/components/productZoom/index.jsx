@@ -62,19 +62,18 @@ const ProductZoom = ({data}) => {
                 </SwiperSlide>
             </Swiper>
         </div>
-      <div className="zoomContainer w-full sm:w-[80%]">
-  <Swiper
-    ref={zoomSliderBig}
-    slidesPerView={1}
-    spaceBetween={10}
-    navigation={false}
-  >
-    <SwiperSlide>
-      <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage} />
-    </SwiperSlide>
-  </Swiper>
-</div>
-
+        <div className="zoomContainer  w-[80%]">
+            <Swiper
+            ref={zoomSliderBig}
+                slidesPerView={1}
+                spaceBetween={10}
+                navigation={false}
+            >
+                <SwiperSlide>
+                <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage} />
+                </SwiperSlide>
+            </Swiper>
+        </div>
     </div>
     </>
   );

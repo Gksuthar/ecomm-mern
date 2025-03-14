@@ -16,7 +16,6 @@ const UserSiteBarManager = () => {
   const [avatar, setAvatar] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
-  // Fetch user data on component mount
   useEffect(() => {
     if (context.isLogin) {
       const getUserData = async () => {
@@ -24,7 +23,6 @@ const UserSiteBarManager = () => {
           const response = await axios.get(`${url}/api/user/user-details`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-
           const userAvatar = response.data.data.avatar;
           setAvatar(Array.isArray(userAvatar) ? userAvatar[0] : userAvatar);
         } catch (error) {
@@ -41,7 +39,6 @@ const UserSiteBarManager = () => {
       setSelectedFile(file);
       const imageUrl = URL.createObjectURL(file);
       setAvatar(imageUrl);
-
       await changeProfile(file); 
     }
   };
@@ -49,7 +46,6 @@ const UserSiteBarManager = () => {
   const changeProfile = async (file) => {
     const formData = new FormData();
     formData.append("avatar", file);
-
     try {
       const response = await axios.post(
         `${url}/api/user/user-avatar`,
@@ -61,7 +57,6 @@ const UserSiteBarManager = () => {
           },
         }
       );
-
       if (response.status === 200) {
         setAvatar(response.data.data.avatar[0]);
       }
@@ -71,29 +66,27 @@ const UserSiteBarManager = () => {
   };
 
   return (
-    <div className="w-full md:w-1/4 p-4">
+    <div className="sm:w-1/2 lg:w-[20vw]  p-4">
       <div className="bg-white shadow-md rounded-md p-5">
         <div className="w-full p-5 flex items-center justify-center flex-col">
           <div className="w-28 h-28 rounded-full overflow-hidden relative group">
             <img
-              className="w-full h-full object-container"
+              className="w-full h-full object-cover"
               src={avatar || "/default-avatar.png"}
               alt="User"
             />
-            <div className="overlay w-[100%] h-[100%] absolute top-0 left-0 z-50 bg-[rgba(0,0,0,0.7)] cursor-pointer flex justify-center items-center transition-all opacity-0 group-hover:opacity-100">
-              <MdOutlineCloudUpload className="text-[#fff] text-[20px]" />
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+              <MdOutlineCloudUpload className="text-white text-xl" />
               <input
                 type="file"
                 name="avatar"
                 onChange={handleFileChange}
                 accept="image/*"
-                className="absolute top-0 left-0 w-full h-full opacity-0"
+                className="absolute inset-0 w-full h-full opacity-0"
               />
             </div>
           </div>
         </div>
-
-        {/* Navigation Links */}
         <nav className="mt-5 space-y-4">
           <Link to="/my-account" className="flex items-center gap-3 p-3 rounded-md bg-gray-100 hover:bg-gray-200">
             <FaRegUserCircle size={20} /> Profile
