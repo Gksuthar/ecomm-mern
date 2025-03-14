@@ -12,7 +12,7 @@ import { MyContext } from "../../App";
 const Sidebar = ({ openSidebarFunction, isOpenSidebar,fetchCategory }) => {
   const  context = useContext(MyContext);
   const url = context.AppUrl
-
+  const token  = localStorage.getItem('accessToken')
   return (
     <Drawer anchor="left" open={isOpenSidebar} onClose={openSidebarFunction}>
       <Box sx={{ width: 250, p: 2 }} className="categoryPanel">
@@ -72,7 +72,13 @@ const Sidebar = ({ openSidebarFunction, isOpenSidebar,fetchCategory }) => {
                     </li>
                   );
                 })}
+
           </ul>
+          {token && 
+            <Button onClick={context.logout} className=" !w-full btn-org !mt-5">
+              Logout
+            </Button>
+          }
         </div>
       </Box>
     </Drawer>

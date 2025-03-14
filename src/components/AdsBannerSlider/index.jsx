@@ -9,7 +9,7 @@ import BannerBox from '../bannerBox';
 
 const AdsBannerSlider = ({items}) => {
   return (
-    <div className='py-5 w-full  overflow-x-hidden'>
+    <div className='py-1 sm:py-5 w-full  overflow-x-hidden'>
         <Swiper
         slidesPerView={items}
         spaceBetween={15}

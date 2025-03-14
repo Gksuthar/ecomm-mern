@@ -43,59 +43,53 @@ function App() {
   const [allFeatureProduct, setAllFeatureProduct] = useState([]);
   const [data, setData] = useState();
   localStorage.setItem("forgetPassword", "true");
-  const [cartLen,setCartLen] = useState(0)
+  const [cartLen, setCartLen] = useState(0);
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [thirdSubCategory, setThirdSubCategory] = useState([]);
   const [activeSubCategory, setActiveSubCategory] = useState(null);
-  const [loadThristCat,setLoadThirstCat] = useState(false)
-  const [windowWidth,setWindowWidth] = useState(window.innerWidth)  
-  
+  const [loadThristCat, setLoadThirstCat] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
-      if (activeSubCategory) {
-        try {
-          
-          setThirdSubCategory(activeSubCategory.children || []);
-        } catch (error) {
-          console.error(error);
-        }
+    if (activeSubCategory) {
+      try {
+        setThirdSubCategory(activeSubCategory.children || []);
+      } catch (error) {
+        console.error(error);
       }
+    }
   }, [setLoadThirstCat]);
-  
 
   useEffect(() => {
     const getAllProductCategory = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await axios.get(
-          `${AppUrl}/api/product`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${AppUrl}/api/product`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (response.status === 200) {
           setAllProduct(response.data.products);
-          console.log(allFeatureProduct)
           setAllFeatureProduct(
-            response.data.products.filter((item) => item.isFeatured===true)
+            response.data.products.filter((item) => item.isFeatured === true)
           );
-                  }
+        }
       } catch (error) {
         console.log("Error :" + error);
       }
     };
     getAllProductCategory();
 
-    const handleResize = ()=>{
-      setWindowWidth(window.innerWidth)
-    }
-    window.addEventListener("resize",handleResize)
-    return ()=>{
-      window.removeEventListener("resize",handleResize)
-    }
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const getProductById = async (id) => {
@@ -132,7 +126,10 @@ function App() {
   const toggleCartPanel = (newOpen) => () => {
     setOpenCartPanel(newOpen);
   };
-
+  const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
+  const openSidebarFunction = () => {
+    setIsOpenSidebar(!isOpenSidebar);
+  };
   const [maxWidth, setMaxWidth] = useState("lg");
   const [fullWidth, setFullWidth] = useState(true);
 
@@ -185,8 +182,6 @@ function App() {
         if (selectedCategory) {
           const subCategories = selectedCategory.children || [];
           setSubCategory(subCategories);
-
-
         } else {
           setSubCategory([]);
         }
@@ -215,7 +210,32 @@ function App() {
     doc.text("Hello, this is a sample PDF!", 10, 10);
     doc.save("sample.pdf");
   };
-      
+  const logout = async () => {
+    try {
+      const response = await axios.post(
+        `${AppUrl}/api/user/Logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data.success === true) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        setIsLogin(false);
+        openAlertBox("success", response.data.message);
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(
+        "Logout failed",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
   const values = {
     handleOpenProductDetailsModal,
     openCartPanel,
@@ -240,7 +260,10 @@ function App() {
     loadThristCat,
     allFeatureProduct,
     windowWidth,
-    downloadPDF
+    downloadPDF,
+    openSidebarFunction,
+    isOpenSidebar,
+    logout,
   };
   return (
     <>
@@ -252,7 +275,10 @@ function App() {
             <Route path="/Login" element={<Login />}></Route>
             <Route path="/cart" element={<CartPage />}></Route>
             <Route path="/Register" element={<Register />}></Route>
-            <Route path="/productListning/:category" element={<ProductListing />}></Route>
+            <Route
+              path="/productListning/:category"
+              element={<ProductListing />}
+            ></Route>
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/newpassword" element={<ForgetPassword />}></Route>
             <Route path="/my-account" element={<MyAccount />}></Route>
@@ -285,11 +311,14 @@ function App() {
               >
                 <CgClose className="text-[20px] " />
               </Button>
-              <div className="col1 w-[40%] ">
-                {data && <ProductZoom data={data} />}
-              </div>
-              <div className="col2 w-[60%] px-10   ml-5 ">
-                {data && <ProductDetailsComponents data={data} />}
+              <div className="flex flex-col sm:flex-row w-full">
+                <div className="w-full sm:w-[40%]">
+                  {data && <ProductZoom data={data} />}
+                </div>
+
+                <div className="w-full sm:w-[60%] px-4 sm:px-10 sm:ml-5">
+                  {data && <ProductDetailsComponents data={data} />}
+                </div>
               </div>
             </div>
           </Typography>

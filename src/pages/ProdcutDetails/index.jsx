@@ -127,8 +127,8 @@ const ProductDetails = () => {
     
   return (
     <>
-      <div className="py-5">
-        <div className="container ">
+      <div className="py-2 sm:py-5">
+        <div className="sm:container ">
           <Breadcrumbs aria-label="breadcrumb" className="mb-4">
             <Link
               underline="hover"
@@ -149,7 +149,7 @@ const ProductDetails = () => {
           </Breadcrumbs>
         </div>
       </div>
-      <section className="bg-white py-2 pl-10">
+      <section className="bg-white py-2 sm:pl-10">
         {/* this is for mobile view */}
         <div className="block sm:hidden">
           <div className="container flex flex-col gap-4">
@@ -174,8 +174,8 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        <div className="container pt-10">
-          <div className="flex items-center gap-8 mb-5">
+        <div className="container pt-3 sm:pt-10">
+          <div className="flex items-center justify-between sm:justify-start mt-6 sm:mt-2 gap-8 mb-5 ">
             <span
               onClick={() => setActiveTab(0)}
               className={`link text-[18px] cursor-pointer font-[500] transition ${
@@ -190,7 +190,7 @@ const ProductDetails = () => {
                 activeTab === 1 ? "text-primary" : ""
               }`}
             >
-              Product Detils
+              Product
             </span>
             <span
               onClick={() => setActiveTab(2)}

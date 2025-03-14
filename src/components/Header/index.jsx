@@ -35,35 +35,6 @@ const Header = () => {
       padding: "0 4px",
     },
   }));
-  const logout = async () => {
-    try {
-      const response = await axios.post(
-        `${url}/api/user/Logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // Handle successful logout
-      // console.log("Logout successful", response.data);
-      if (response.data.success === true) {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        context.setIsLogin(false);
-        context.openAlertBox("success", response.data.message);
-        navigate("/");
-      }
-    } catch (error) {
-      // Handle error
-      console.error(
-        "Logout failed",
-        error.response ? error.response.data : error.message
-      );
-    }
-  };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -86,7 +57,7 @@ const Header = () => {
             </div>
             <div className="col2 items-center justify-end">
               <ul className="flex items-center gap-3">
-                <li className="list-none ">
+                <li className="list-none flex gap-4 ">
                   <Link
                     className="link transition text-[13px]  font-[500]"
                     to="/help-center"
@@ -106,9 +77,12 @@ const Header = () => {
         </div>
       </div>
 
-      <div className="header py-4  border-b-[1px]">
+      <div className="header py-2  border-b-[1px]">
         <div className="container flex items-center justify-between">
-          <div className="sm:hidden flex items-center justify-start w-[33%]">
+          <div
+            onClick={context.openSidebarFunction}
+            className="sm:hidden flex items-center justify-start w-[33%]"
+          >
             <AiOutlineMenu className="text-2xl" />
           </div>
 
@@ -120,7 +94,7 @@ const Header = () => {
           <div className="hidden sm:block col2 w-[33%] sm:w-[43%] ">
             <Search />
           </div>
-          <div className="col3 sm:w-[32%]  w-[33%]  flex items-center pl-5 ">
+          <div className="col3 sm:w-[32%]  w-[33%]  flex  items-center pl-5 ">
             <ul className="w-full flex items-center  justify-end gap-1 sm:gap-3 ">
               {!context.isLogin ? (
                 <>
@@ -142,14 +116,14 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className=" hidden sm:block  classMyAccountwrapper flex items-center     cursor-pointer ">
+                  <div className="hidden sm:flex items-center space-x-2 cursor-pointer classMyAccountwrapper">
                     <Button
                       onClick={handleClick}
-                      className="!w-[50px] !h-[50px] !min-w-[50px]   !rounded-full"
+                      className="!w-[50px] !h-[50px] !min-w-[50px] !rounded-full"
                     >
-                      <FaRegUserCircle className=" text-[20px]  text-[rgba(0,0,0,0.7)]" />
+                      <FaRegUserCircle className="text-[20px] text-[rgba(0,0,0,0.7)]" />
                     </Button>
-                    <div className="hidden sm:block info flex flex-col justify-end ">
+                    <div className="hidden sm:flex flex-col justify-end">
                       <h4 className="text-[14px] !mb-0 font-[500]">
                         {context?.UserProfile?.name}
                       </h4>
@@ -158,6 +132,7 @@ const Header = () => {
                       </span>
                     </div>
                   </div>
+
                   <Menu
                     anchorEl={anchorEl}
                     id="account-menu"
@@ -221,7 +196,7 @@ const Header = () => {
                     </Link>
                     <MenuItem
                       className="flex gap-2 !text-[14px] !py-2"
-                      onClick={logout}
+                      onClick={context.logout}
                     >
                       <RiLogoutBoxRFill className="!text-[18px]" /> Logout
                     </MenuItem>
@@ -259,7 +234,10 @@ const Header = () => {
                       aria-label="cart"
                       onClick={() => context.setOpenCartPanel(true)}
                     >
-                      <StyledBadge badgeContent={4} color="secondary">
+                      <StyledBadge
+                        badgeContent={context.cartLen}
+                        color="secondary"
+                      >
                         <LuShoppingCart />
                       </StyledBadge>
                     </IconButton>

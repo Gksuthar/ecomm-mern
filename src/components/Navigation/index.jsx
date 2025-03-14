@@ -7,18 +7,17 @@ import { GoRocket } from "react-icons/go";
 import Sidebar from "./Sidebar";
 import { MyContext } from "../../App";
 import MobileNav from "./MobileNav";
-import './style.css'
+import "./style.css";
 import { GoDownload } from "react-icons/go";
-
 const Navigation = () => {
-  const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
+  // const [isOpenSidebar, setIsOpenSidebar] = React.useState(false);
   const [activeSubCategory, setActiveSubCategory] = React.useState(null);
 
   const context = useContext(MyContext);
 
-  const openSidebarFunction = () => {
-    setIsOpenSidebar(!isOpenSidebar);
-  };
+  // const openSidebarFunction = () => {
+  //   setIsOpenSidebar(!isOpenSidebar);
+  // };
 
   const showMenuCategory = async (id, name) => {
     try {
@@ -32,10 +31,10 @@ const Navigation = () => {
     <>
       <nav className="py-2 sticky top-0  w-full bg-white z-50 ">
         <div className="container    flex items-center justify-end gap-8">
-          <div className="hidden sm:block col_1 sm:w-[20%]">
+          <div className="hidden sm:block col_1 sm:w-[30%]">
             <Button
               className="!text-black gap-2 w-full"
-              onClick={openSidebarFunction}
+              onClick={context.openSidebarFunction}
               aria-label="Shop By Category"
             >
               <RiMenu2Fill className="text-[18px]" />
@@ -44,7 +43,7 @@ const Navigation = () => {
             </Button>
           </div>
 
-          <div className="col_2 !w-[100%] sm:w-[60%]">
+          <div className="col_2 !w-[100%] sm:w-[50%]">
             <ul className="flex items-center gap-5 nav">
               {context.categoryData &&
                 context.categoryData.map((item, indx) => (
@@ -57,7 +56,16 @@ const Navigation = () => {
                       to="/"
                       className="link transition text-[14px] font-[500]"
                     >
-                      {item.name}
+                      <Button
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: "transparent", 
+                          },
+                        }}
+                        className="!capitalize !text-black hover:!text-red-600 transition-all duration-300 "
+                      >
+                        {item.name}
+                      </Button>
                     </Link>
 
                     <div className="submenu absolute top-full left-0 min-w-[200px] bg-white shadow-md opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all z-50">
@@ -110,7 +118,7 @@ const Navigation = () => {
             </ul>
           </div>
 
-          <div className="col_3 w-[20%]">
+          <div className="col_3 w-[30%]">
             <p className="text-[14px] font-[500] flex items-center gap-3 mb-0 mt-0">
               <GoRocket className="text-[18px]" /> Free International Delivery
             </p>
@@ -118,12 +126,10 @@ const Navigation = () => {
         </div>
       </nav>
       <Sidebar
-        openSidebarFunction={openSidebarFunction}
-        isOpenSidebar={isOpenSidebar}
-        />
-        {    
-          context.windowWidth<992 && <MobileNav/>
-        }
+        openSidebarFunction={context.openSidebarFunction}
+        isOpenSidebar={context.isOpenSidebar}
+      />
+      {context.windowWidth < 992 && <MobileNav />}
     </>
   );
 };

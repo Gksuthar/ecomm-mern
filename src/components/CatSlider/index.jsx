@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 const CategorySlider = () => {
   return (
-    <div className="homecatSlider py-8 pt-4">
+    <div className="homecatSlider py-3 sm:py-8 pt-4">
       <div className="container">
         <Swiper
           slidesPerView={7}
@@ -17,7 +17,7 @@ const CategorySlider = () => {
           modules={[Navigation]}
           breakpoints={{
             0: {
-              slidesPerView: 2,
+              slidesPerView: 3,
             },
             480: {
               slidesPerView: 3,
@@ -35,7 +35,7 @@ const CategorySlider = () => {
         >
           <SwiperSlide>
             <Link to="/productListning/Smart-Tablet">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/11-cz_categoryimagelist.jpg"
                   alt="Smart Tablet"
@@ -48,7 +48,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/productListning/T-Shirts">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/12-cz_categoryimagelist.jpg"
                   alt="Smart Tablet"
@@ -61,7 +61,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/productListning/Smart-Watch">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/13-cz_categoryimagelist.jpg"
                   alt="Smart Watch"
@@ -74,7 +74,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/productListning/Chair">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/15-cz_categoryimagelist.jpg"
                   alt="Wooden Chair"
@@ -87,7 +87,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/productListning/Shoes">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/16-cz_categoryimagelist.jpg"
                   alt="Sneakers Shoes"
@@ -100,7 +100,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/productListning/Purse">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/17-cz_categoryimagelist.jpg"
                   alt="Purse"
@@ -113,7 +113,7 @@ const CategorySlider = () => {
 
           <SwiperSlide>
             <Link to="/">
-              <div className="item py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/18-cz_categoryimagelist.jpg"
                   alt="X-Controller"

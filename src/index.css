@@ -204,3 +204,15 @@ input::-webkit-inner-spin-button {
 /* .rightSecreenCat{
     overflow: scroll;
 } */
+
+.MuiButtonBase-root {
+    display: none;
+}
+
+@media (max-width: 767px) {
+     swiper-button-prev,
+     swiper-button-next {
+      display: none !important;
+    }
+  }
+  

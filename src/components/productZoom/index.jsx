@@ -42,7 +42,7 @@ const ProductZoom = ({data}) => {
                 navigation={true}
                 direction={'vertical'}
                 modules={[Navigation]}
-                className="zoomProductsSliderThumbs w-[87%] h-[500px] overflow-hidden cursor-pointer"
+                className="zoomProductsSliderThumbs sm:w-[87%] h-[500px] overflow-hidden cursor-pointer"
             >
                 <SwiperSlide>
                     <div  onClick={()=>goto(0)} className={`item rounded-md overflow-hidden cursor-pointer group  ${SliderIndex===0 ? 'opacity-1' : 'opacity-30'}`}>
@@ -62,18 +62,19 @@ const ProductZoom = ({data}) => {
                 </SwiperSlide>
             </Swiper>
         </div>
-        <div className="zoomContainer w-[80%]">
-            <Swiper
-            ref={zoomSliderBig}
-                slidesPerView={1}
-                spaceBetween={10}
-                navigation={false}
-            >
-                <SwiperSlide>
-                <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage} />
-                </SwiperSlide>
-            </Swiper>
-        </div>
+      <div className="zoomContainer w-full sm:w-[80%]">
+  <Swiper
+    ref={zoomSliderBig}
+    slidesPerView={1}
+    spaceBetween={10}
+    navigation={false}
+  >
+    <SwiperSlide>
+      <InnerImageZoom zoomType="hover" zoomScale={1} src={selectedImage} />
+    </SwiperSlide>
+  </Swiper>
+</div>
+
     </div>
     </>
   );
