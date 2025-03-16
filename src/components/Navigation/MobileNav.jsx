@@ -26,13 +26,15 @@ const MobileNav = () => {
         <IoSearchOutline size={20} className="mb-1" />
         <span className="text-[14px] leading-none">Search</span>
       </Button>
+      <Link to="/myList">
       <Button
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"
         disableRipple
-      >
+        >
         <CiHeart size={20} className="mb-1" />
         <span className="text-[14px] leading-none">WhichLst</span>
       </Button>
+        </Link>
       <Link to='/orders'>
       <Button
         className="flex flex-col items-center !p-0 !w-[50px] !min-w-[50px] !capitalize !text-gray-600"

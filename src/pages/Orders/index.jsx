@@ -36,8 +36,8 @@ const Orders = () => {
     const getOrder = async () => {
       try {
         const token = localStorage.getItem('accessToken');
-        console.log('Token:', token);  // Check if token exists
-        console.log('API URL:', url);  // Confirm URL is correct
+        console.log('Token:', token);  
+        console.log('API URL:', url);  
 
         const response = await axios.get(`${url}/api/order/`, {
           headers: {
@@ -60,8 +60,10 @@ const Orders = () => {
   return (
     <div className="py-10 w-full">
       <div className="container flex gap-5">
-        <UserSiteBarManager />
-        <div className="productItem rounded-sm border border-[rgba(0,0,0,0.1)] w-[75%] bg-white shadow-md mt-4 p-4">
+        {context.windowWidth > 475 &&
+          <UserSiteBarManager />
+        }
+        <div className="productItem rounded-sm border border-[rgba(0,0,0,0.1)] w-[100%] sm:w-[75%] bg-white shadow-md mt-4 p-4">
           <h2 className="text-xl font-bold mb-2">My Orders</h2>
           <p className="mb-4">There are {orders.length} Orders</p>
 
@@ -104,7 +106,7 @@ const Orders = () => {
                     <td className="px-6 py-4">{item.userId.email}</td>
                     <td className="px-6 py-4">Delivered</td>
                     <td className="px-6 py-4">{item.createdAt}</td>
-                    <td className="px-6 py-4  flex justify-center items-center "><GoDownload onClick={context.downloadPDF} className='cursor-pointer text-[20px]' /></td>
+                    <td className="px-6 py-4  !flex justify-center !items-center "><GoDownload onClick={context.downloadPDF} className='cursor-pointer text-[20px]' /></td>
                   </tr>
                 ))}
               </tbody>
@@ -136,7 +138,6 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* {perticulerOrder.products.map((product, indx) => ( */}
                   <tr  className="bg-white border-b hover:bg-gray-50">
                     <td className="px-6 py-4">{perticulerOrder.productId._id}</td>
                     <td className="px-6 py-4">{perticulerOrder.productId.name.substring(0,50)}...</td>
@@ -147,7 +148,6 @@ const Orders = () => {
                     <td className="px-6 py-4">{perticulerOrder.productId.price}</td>
                     <td className="px-6 py-4">{perticulerOrder.productId.price * 1}</td>
                   </tr>
-                {/* ))} */}
               </tbody>
             </table>
           ) : (

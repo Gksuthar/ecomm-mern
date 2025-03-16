@@ -11,24 +11,24 @@ import ProductItemListView from "../ProductListingListView";
 import Pagination from '@mui/material/Pagination';
 import CategoryProductListning from "../CategoryProductListning";
 import { useParams } from "react-router-dom";
+
 const ProductListing = () => {
-const [itmView,setItmView]  = useState('grid');
-// const location = useLocation();
-// const queryParams = new URLSearchParams(location.search);
-// const category = queryParams.get('category');
-const [anchorEl, setAnchorEl] = useState(null);
-const open = Boolean(anchorEl);
-  const {category} = useParams()
+  const [itmView, setItmView] = useState('grid');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const { category } = useParams();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
   return (
     <section className="py-4 bg-gray-100 min-h-screen pb-0">
-      <div className="container">
+      <div className="container mx-auto px-4">
         {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb" className="mb-4">
           <Link underline="hover" color="inherit" href="/" className="text-blue-600 hover:underline">
@@ -40,22 +40,24 @@ const open = Boolean(anchorEl);
         </Breadcrumbs>
 
         {/* Layout Wrapper */}
-        <div className="bg-white p-4 rounded-md shadow-md flex gap-4">
+        <div className="bg-white p-4 rounded-md shadow-md flex flex-col md:flex-row gap-4">
           {/* Sidebar */}
-          <div className="w-[20%] bg-white border-r border-gray-300 min-h-[80vh] p-3">
+          <div className="w-full md:w-[20%] bg-white border-r border-gray-300 min-h-[80vh] p-3">
             <SidebarListning />
           </div>
 
-          <div className="w-[80%] py-3">
-            <div className="bg-[#f1f1f1] p-3 mb-4 rounded-md flex items-center justify-between">
+          <div className="w-full md:w-[80%] py-3">
+            <div className="bg-[#f1f1f1] p-3 mb-4 rounded-md flex flex-col md:flex-row items-center justify-between">
               <div className="flex items-center gap-2 itemViewAction">
                 <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-md bg-gray-200 hover:bg-gray-300 ${itmView==='grid' && 'active'} `} onClick={()=>setItmView('grid')}
+                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-md bg-gray-200 hover:bg-gray-300 ${itmView === 'grid' && 'active'}`}
+                  onClick={() => setItmView('grid')}
                 >
                   <IoGrid className="text-gray-600 text-[18px]" />
                 </Button>
                 <Button
-                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-md bg-gray-200 hover:bg-gray-300 ${itmView==='list' && 'active'} `} onClick={()=>setItmView('list')}
+                  className={`!w-[40px] !h-[40px] !min-w-[40px] !rounded-md bg-gray-200 hover:bg-gray-300 ${itmView === 'list' && 'active'}`}
+                  onClick={() => setItmView('list')}
                 >
                   <IoMdMenu className="text-gray-600 text-[20px]" />
                 </Button>
@@ -65,7 +67,7 @@ const open = Boolean(anchorEl);
               </div>
 
               {/* Right Controls */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-4 md:mt-0">
                 <span className="text-[14px] font-medium text-gray-700">Sort By:</span>
                 <Button
                   id="basic-button"
@@ -86,33 +88,28 @@ const open = Boolean(anchorEl);
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem  className='!text-[12px] !capitalize ' onClick={handleClose}>Relevance</MenuItem>
-                  <MenuItem className='!text-[12px] !capitalize '  onClick={handleClose}>Sales, highest to lowest</MenuItem>
-                  <MenuItem className='!text-[12px] !capitalize '  onClick={handleClose}>Name, A to Z</MenuItem>
-                  <MenuItem className='!text-[12px] !capitalize '  onClick={handleClose}>Name, Z to A</MenuItem>
-                  <MenuItem className='!text-[12px] !capitalize '  onClick={handleClose}>Price, low to high</MenuItem>
-                  <MenuItem className='!text-[12px] !capitalize '  onClick={handleClose}>Price, high to low</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Relevance</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Sales, highest to lowest</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Name, A to Z</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Name, Z to A</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Price, low to high</MenuItem>
+                  <MenuItem className='!text-[12px] !capitalize' onClick={handleClose}>Price, high to low</MenuItem>
                 </Menu>
               </div>
             </div>
 
-            {/* Product Grid */}
-            <div className={`grid ${itmView==='grid' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'}  gap-4`}>
-              {itmView==='grid' ? (
+            <div className={`grid ${itmView === 'grid' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-1'} gap-4`}>
+              {itmView === 'grid' ? (
                 <>
-                 
-                  <CategoryProductListning category={category}/>
+                  <CategoryProductListning category={category} />
                 </>
               ) : (
                 <>
-                  <ProductItemListView category={category}/>
+                  <ProductItemListView category={category} />
                 </>
-              )
-              }
+              )}
             </div>
-           
           </div>
-
         </div>
       </div>
     </section>

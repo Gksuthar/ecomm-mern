@@ -1,168 +1,100 @@
 import React from "react";
-import { FaShippingFast } from "react-icons/fa";
+import { FaShippingFast, FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
 import { GiReturnArrow } from "react-icons/gi";
 import { MdPayment } from "react-icons/md";
-import { IoGiftSharp } from "react-icons/io5";
+import { IoGiftSharp, IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BiSupport } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { Button } from "@mui/material";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import { FaFacebookF } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa6";
 import { BsFillThreadsFill } from "react-icons/bs";
 
 const Footer = () => {
   return (
     <>
       <footer className="py-6 bg-white border-t-2 border-[rgba(0,0,0,0.1)]">
-        <div className="container">
-          <div className="flex items-center justify-between py-8 gap-2 pb-8 ">
-            <div className="col flex items-center justify-center flex-col group">
-              <FaShippingFast className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />
-              <h3 className="text-[18px] font-[600] mt-3">Free shipping</h3>
-              <p className="text-[14px] font-[500]">For all Order Over $100</p>
-            </div>
-            <div className="col flex items-center justify-center flex-col group ">
-              <GiReturnArrow className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />
-              <h3 className="text-[18px] font-[600] mt-3">30 Days Returns</h3>
-              <p className="text-[14px] font-[500]">For an Exchange Product</p>
-            </div>
-            <div className="col flex items-center justify-center flex-col group ">
-              <MdPayment className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />
-              <h3 className="text-[18px] font-[600] mt-3">Secured Payment</h3>
-              <p className="text-[14px] font-[500]">Payment Cards Accepted</p>
-            </div>
-            <div className="col flex items-center justify-center flex-col group ">
-              <IoGiftSharp className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />
-              <h3 className="text-[18px] font-[600] mt-3">Special Gifts</h3>
-              <p className="text-[14px] font-[500]">Our First Product Order</p>
-            </div>
-            <div className="col flex items-center justify-center flex-col group ">
-              <BiSupport className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />
-              <h3 className="text-[18px] font-[600] mt-3">Support 24/7</h3>
-              <p className="text-[14px] font-[500]">Contact us Anytime</p>
-            </div>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 py-8">
+            {[
+              { icon: <FaShippingFast className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />, title: "Free shipping", description: "For all Order Over $100" },
+              { icon: <GiReturnArrow className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />, title: "30 Days Returns", description: "For an Exchange Product" },
+              { icon: <MdPayment className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />, title: "Secured Payment", description: "Payment Cards Accepted" },
+              { icon: <IoGiftSharp className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />, title: "Special Gifts", description: "Our First Product Order" },
+              { icon: <BiSupport className="text-[60px] transition-all duration-300 group-hover:-translate-y-1 group-hover:text-primary" />, title: "Support 24/7", description: "Contact us Anytime" }
+            ].map((item, index) => (
+              <div key={index} className="flex flex-col items-center justify-center text-center group">
+                {item.icon}
+                <h3 className="text-lg font-semibold mt-3">{item.title}</h3>
+                <p className="text-sm font-medium">{item.description}</p>
+              </div>
+            ))}
           </div>
           <hr />
-          <br />
-          <div className="footer flex py-8 ">
-            <div className="part1 w-[25%] border-r border-[rgba(0,0,0,0.2)]">
-              <h2 className="text-[18px] font-[600] mb-4">Contect Us</h2>
-              <p className="text-[13px] font-[400] pb-4">
-                Classyshop - Mega Super Store <br /> 507-Union Trade Centre
-                Franc
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-8">
+            {/* Contact Us */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Contact Us</h2>
+              <p className="text-sm">
+                Classyshop - Mega Super Store <br /> 507-Union Trade Centre, Franc
               </p>
-              <Link className="link" to="sales@yourcompany.com ">
+              <Link className="text-sm text-blue-600 hover:text-blue-800" to="mailto:sales@yourcompany.com">
                 sales@yourcompany.com
               </Link>
-              <span className="text-[20px] font-[600] block w-full mt-4 text-primary mb-5">
+              <span className="text-xl font-semibold text-primary block mt-4">
                 (+91) 123456789
               </span>
               <div className="flex items-center gap-2">
-                <IoChatboxEllipsesOutline className="text-[33px] text-primary" />
-                <span className="text-[16px] font-[600] pl-2">
+                <IoChatboxEllipsesOutline className="text-3xl text-primary" />
+                <span className="text-sm font-semibold">
                   Online Chat <br />
                   Get Expert Help
                 </span>
               </div>
             </div>
 
-            <div className="part2 w-[40%] flex pl-8  ">
-              <div className="part2_col1 w-[50%]  ">
-                <h2 className="text-[18px] font-[600] mb-4">Products</h2>
-                <ul className="list">
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Prices drop
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      New products
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Best sales
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Contact us
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Sitemap
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Stores
-                    </Link>
-                  </li>
+            {/* Products & Company Info */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Products</h2>
+                <ul className="space-y-2">
+                  {["Prices drop", "New products", "Best sales", "Contact us", "Sitemap", "Stores"].map((item, index) => (
+                    <li key={index}>
+                      <Link className="text-sm text-gray-500 hover:text-gray-700">{item}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
-              <div className="part2_col2 w-[50%]">
-                <h2 className="text-[18px] font-[600] mb-4">Our company</h2>
-                <ul className="list">
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Delivery
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Legal Notice
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Terms and conditions of use
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      About us
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Secure payment
-                    </Link>
-                  </li>
-                  <li className="list-none mb-2">
-                    <Link className="link text-[14px] w-full font-[500] transition text-gray-500">
-                      Login
-                    </Link>
-                  </li>
+              <div>
+                <h2 className="text-lg font-semibold mb-4">Our Company</h2>
+                <ul className="space-y-2">
+                  {["Delivery", "Legal Notice", "Terms and Conditions", "About Us", "Secure Payment", "Login"].map((item, index) => (
+                    <li key={index}>
+                      <Link className="text-sm text-gray-500 hover:text-gray-700">{item}</Link>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
 
-            <div className="part2 w-[35%] pl-8  ">
-              <h2 className="text-[18px] font-[600] mb-4">
-                Subscribe to newsletter
-              </h2>
-              <p className="text-[14px] text-gray-500 font-[500]">
-                Subscribe to our latest newsletter to get news about special
-                discounts.
+            {/* Newsletter */}
+            <div className="space-y-4">
+              <h2 className="text-lg font-semibold">Subscribe to Newsletter</h2>
+              <p className="text-sm text-gray-500">
+                Subscribe to our latest newsletter to get news about special discounts.
               </p>
-              <form action="" className="mt-5">
+              <form className="space-y-4">
                 <input
                   type="text"
-                  placeholder="your email address"
-                  className="w-full h-[40px] border outline-none rounded-md pl-4 pr-4 mb-4 focus:border-[#000]"
+                  placeholder="Your email address"
+                  className="w-full h-10 border rounded-md px-4 focus:border-black"
                 />
-                <Button className="btn-org">SUBMIT</Button>
+                <Button className="w-full bg-primary text-white hover:bg-primary-dark btn-org">SUBMIT</Button>
                 <FormControlLabel
-                  className="text-gray-500 !text-[10px] mt-1  "
                   control={<Checkbox size="small" />}
                   label="I agree to the terms and conditions and the privacy policy"
+                  className="text-xs text-gray-500"
                 />
               </form>
             </div>
@@ -170,22 +102,22 @@ const Footer = () => {
         </div>
       </footer>
 
-      <div className="bottomStrip border-t border-[rgba(0,0,0,1)] py-3 bg-white">
-        <div className="container flex items-center justify-between flex-row">
-          <ul className="flex items-center gap-2">
-            <li className="list-none"><Link to='/' target="_blank" className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.2)] flex justify-center items-center group transition-all hover:bg-primary"><FaFacebookF className="text-[15px] group-hover:text-white "/></Link></li>
-            <li className="list-none"><Link to='/' target="_blank" className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.2)] flex justify-center items-center group transition-all  hover:bg-primary "><FaInstagram className="text-[15px] group-hover:text-white"/></Link></li>
-            <li className="list-none"><Link to='/' target="_blank" className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.2)] flex justify-center items-center group transition-all hover:bg-primary"><FaYoutube className="text-[15px] group-hover:text-white"/></Link></li>
-            <li className="list-none"><Link to='/' target="_blank" className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.2)] flex justify-center items-center group transition-all  hover:bg-primary"><BsFillThreadsFill className="text-[15px] group-hover:text-white"/></Link></li>
+      <div className="bg-white border-t border-black py-3">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+          <ul className="flex space-x-2">
+            {[FaFacebookF, FaInstagram, FaYoutube, BsFillThreadsFill].map((Icon, index) => (
+              <li key={index}>
+                <Link to="/" target="_blank" className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                  <Icon className="text-lg" />
+                </Link>
+              </li>
+            ))}
           </ul>
-          <p className="text-[13px] text-center">© 2025 - Ecommerce software by PrestaShop™</p>
-
-          <div className="flex items-center">
-            <img src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/carte_bleue.png" alt="image" />
-            <img src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/visa.png" alt="image" />
-            <img src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/master_card.png" alt="image" />
-            <img src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/american_express.png" alt="image" />
-            <img src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/paypal.png" alt="image" />
+          <p className="text-sm text-center">© 2025 - Ecommerce software by PrestaShop™</p>
+          <div className="flex space-x-2">
+            {["carte_bleue", "visa", "master_card", "american_express", "paypal"].map((logo, index) => (
+              <img key={index} src={`https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_blockpaymentlogo/views/img/${logo}.png`} alt={logo} className="h-6" />
+            ))}
           </div>
         </div>
       </div>

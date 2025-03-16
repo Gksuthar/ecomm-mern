@@ -56,8 +56,10 @@ const Wishlist = () => {
   return (
     <div className=" p-4     ">
       <div className="conatainer flex ">
+        {context.windowWidth>450 &&
           <UserSiteBarManager/>
-      <div className="p-4 mt-4 w-[75%] bg-white  ">
+        }
+      <div className="p-4 mt-4 w-[100%] sm:w-[75%] bg-white  ">
 
         <h1 className="text-2xl font-bold mb-4 ">My Wishlist ({wichListData.length})</h1>
         <div className="space-y-4 ">

@@ -10,6 +10,7 @@ import { useContext } from "react";
 import axios from "axios";
 import { MyContext } from "../../App";
 import toast, { Toaster } from 'react-hot-toast';
+import { CiShoppingCart } from "react-icons/ci";
 
 const ProductItem = ({item}) => {
   const context  = useContext(MyContext)
@@ -66,18 +67,19 @@ const ProductItem = ({item}) => {
       </div>
       <div className="info p-3  py-3 bg-[#ecebeb] ">
         <h6 className="text-[14px] link transition-all">
-          <Link to="/productListning">{item?.name.substring(0,20)}...</Link>
+          <Link to="/productListning">{item?.brand}</Link>
         </h6>
         <h3 className="text-[13px] title font-[500] text-[#000] link transition-all mb-1">
-          <Link to="/productListning">{item?.description.substring(0,30)}...</Link>
+          <Link to="/productListning">{item?.name.substring(0,30)}...</Link>
         </h3>
         <Rating name="size-small" defaultValue={item?.rating} size="small" readOnly />
-        <div className="flex items-center gap-4">
+        <div className="flex items-center  gap-4">
           <span className="price line-through text-gray-500 text-[15 px] font-[600]">
           ₹:{item?.oldPrice}
           </span>
           <span className="newPrice  text-primary font-bold">₹:{item?.price}</span>
         </div>
+      
       </div>
     </div>
   );
