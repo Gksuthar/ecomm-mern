@@ -10,40 +10,46 @@ import ProductsSlider from "../../components/ProductsSlider";
 import ProductDetailsComponents from "../../components/ProductsDetails";
 import axios from "axios";
 import { MyContext } from "../../App";
-import toast, { Toaster } from 'react-hot-toast';
-
+import toast, { Toaster } from "react-hot-toast";
+import { TailSpin } from "react-loader-spinner";
 const ProductDetails = () => {
   const context = useContext(MyContext);
   const url = context.AppUrl;
-  const [allReview,setAllReview] = useState([])
+  const [allReview, setAllReview] = useState([]);
   const [rating, setRating] = useState(4);
-  const [review, setReview] = useState('');
+  const [review, setReview] = useState("");
   const [totalReview, setTotalReview] = useState(0);
-
-
+  const [loading, setLoading] = useState(false);
   const [productActionIndex, setProActionIndex] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [data, setData] = useState();
+  const [error, setError] = useState(null);
+
   const setProductActionIndex = (index) => {
     setProActionIndex(index);
     console.log(productActionIndex);
   };
 
   const { id } = useParams();
+
   useEffect(() => {
+    window.scrollTo(0, 0);
     const token = localStorage.getItem("accessToken");
     const getProductById = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await axios.get(`${url}/api/product/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        
+
         if (response.status === 200) {
           setData(response.data.product);
         }
       } catch (error) {
+        setError(error);
         console.log(error);
         if (error.response) {
           console.error("Response error:", error.response);
@@ -52,23 +58,27 @@ const ProductDetails = () => {
         } else {
           console.error("Error:", error.message);
         }
+      } finally {
+        setLoading(false);
       }
     };
-    
+
     getProductById();
   }, [id, url]);
-  
 
-  const token = localStorage.getItem('accessToken');
+  if (error) {
+    return <div>Error: {error.message || "An error occurred"}</div>;
+  }
+
+  const token = localStorage.getItem("accessToken");
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-  
-  
+
     if (!review.trim()) {
       alert("Please write a review before submitting.");
       return;
     }
-  
+
     try {
       const response = await axios.post(
         `${url}/api/review/create-review`,
@@ -79,25 +89,29 @@ const ProductDetails = () => {
           },
         }
       );
-  
+
       if (response.status === 201) {
-        toast.success('Your review has been saved successfully!')
-        setReview(''); 
-        setRating(4);  
+        toast.success("Your review has been saved successfully!");
+        setReview("");
+        setRating(4);
         setAllReview((prevReviews) => [
           ...prevReviews,
-          { productId: id, comment: review, rating, createdAt: new Date().toISOString() }
+          {
+            productId: id,
+            comment: review,
+            rating,
+            createdAt: new Date().toISOString(),
+          },
         ]);
-        setTotalReview((prev)=>prev+1)
-        
-  
-
+        setTotalReview((prev) => prev + 1);
       } else {
         alert("Failed to submit the review. Please try again.");
       }
     } catch (error) {
       if (error.response) {
-        alert(`Error: ${error.response.data.message || 'Something went wrong.'}`);
+        alert(
+          `Error: ${error.response.data.message || "Something went wrong."}`
+        );
       } else if (error.request) {
         alert("Network error. Please check your internet connection.");
       } else {
@@ -106,27 +120,44 @@ const ProductDetails = () => {
       }
     }
   };
-    useEffect(() => {
-      const getAllReviewFromDb=async()=>{
-        try {
-          const response = await axios.get(`${url}/api/review/product-reviews/${id}`,{
-            headers:{
-              Authorization:`Bearer ${token}`
-            }
-          })
-          if (response.status===200) {
-            setAllReview(response.data);
-            setTotalReview(response.data.length)
+  useEffect(() => {
+    const getAllReviewFromDb = async () => {
+      try {
+        const response = await axios.get(
+          `${url}/api/review/product-reviews/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        } catch (error) {
-          console.error(error);
+        );
+        if (response.status === 200) {
+          setAllReview(response.data);
+          setTotalReview(response.data.length);
         }
+      } catch (error) {
+        console.error(error);
       }
-      getAllReviewFromDb()
-    },[])
-    
+    };
+    getAllReviewFromDb();
+  }, []);
+
   return (
     <>
+      {loading && (
+        <div className="flex justify-center items-center h-screen">
+          <TailSpin
+            visible={true}
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        </div>
+      )}
       <div className="py-2 sm:py-5">
         <div className="sm:container ">
           <Breadcrumbs aria-label="breadcrumb" className="mb-4">
@@ -150,7 +181,6 @@ const ProductDetails = () => {
         </div>
       </div>
       <section className="bg-white py-2 sm:pl-10">
-        {/* this is for mobile view */}
         <div className="block sm:hidden">
           <div className="container flex flex-col gap-4">
             <div className="productZoomContainer w-full h-[350px] overflow-hidden">
@@ -162,14 +192,15 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* this is not for mobile  */}
         <div className="hidden sm:block">
           <div className=" container flex gap-8">
             <div className="productZoomContainer sm:w-[40%] sm:h-[70vh] overflow-hidden">
               {data && <ProductZoom data={data} />}
             </div>
             <div className="productContent  sm:w-[60%]">
-              {data && <ProductDetailsComponents data={data} length={totalReview}  />}
+              {data && (
+                <ProductDetailsComponents data={data} length={totalReview} />
+              )}
             </div>
           </div>
         </div>
@@ -295,34 +326,35 @@ const ProductDetails = () => {
                 </h2>
 
                 <div className="w-full max-h-[350px] overflow-y-auto">
-                  { allReview.map((item,indx)=>(
-
-                    <div key={indx} className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 ">
-                    <div className="w-[60%] flex items-center gap-2">
-                      <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
-                        <img
-                          src="https://www.shutterstock.com/image-photo/paris-france-june-3-2017-260nw-657978760.jpg"
-                          className="w-full"
-                          alt="User"
-                        />
+                  {allReview.map((item, indx) => (
+                    <div
+                      key={indx}
+                      className="review w-full flex items-center justify-between mb-3 border-b border-gray-300 "
+                    >
+                      <div className="w-[60%] flex items-center gap-2">
+                        <div className="img h-[60px] w-[60px] mt-2 overflow-hidden rounded-full">
+                          <img
+                            src="https://www.shutterstock.com/image-photo/paris-france-june-3-2017-260nw-657978760.jpg"
+                            className="w-full"
+                            alt="User"
+                          />
+                        </div>
+                        <div className="w-[80%]">
+                          <h4 className="text-[16px] font-[500] mt-3">
+                            {item.userId?.name}
+                          </h4>
+                          <h5 className="text-[12px] text-gray-400 font-[500]">
+                            2025-09-29
+                          </h5>
+                          <p className="text-[12px] font-[400] mt-2 mb-4">
+                            {item.comment}
+                          </p>
+                        </div>
                       </div>
-                      <div className="w-[80%]">
-                        <h4 className="text-[16px] font-[500] mt-3">
-                          {item.userId?.name}
-                        </h4>
-                        <h5 className="text-[12px] text-gray-400 font-[500]">
-                          2025-09-29
-                        </h5>
-                        <p className="text-[12px] font-[400] mt-2 mb-4">
-                          {item.comment}
-                        </p>
-                      </div>
+                      <Rating name="size-small" value={item.rating} readOnly />
                     </div>
-                    <Rating name="size-small" value={item.rating} readOnly />
-                  </div>
-                        ))
-                        }
-                 
+                  ))}
+
                   <br />
                 </div>
                 <div className="reviewForm bg-[#fafafa] p-4 mt-1 ">
@@ -337,14 +369,19 @@ const ProductDetails = () => {
                       variant="filled"
                       value={review}
                       onChange={(e) => setReview(e.target.value)}
-
                     />
                     <br />
                     <br />
-                    <Rating name="size-small" value={rating} onChange={(event, newValue) => setRating(newValue)}
- />
+                    <Rating
+                      name="size-small"
+                      value={rating}
+                      onChange={(event, newValue) => setRating(newValue)}
+                    />
                     <div className="flex items-center justify-center ">
-                      <Button type="submit" className="btn-org transition-all duration-300 ease-in-out  ">
+                      <Button
+                        type="submit"
+                        className="btn-org transition-all duration-300 ease-in-out  "
+                      >
                         Submit Review
                       </Button>{" "}
                     </div>

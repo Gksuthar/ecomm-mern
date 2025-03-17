@@ -12,8 +12,6 @@
   const ProductDetailsComponents = ({ data,length }) => {
     const [productActionIndex, setProActionIndex] = useState(null);
     const [quantity, setQuantity] = useState(1);
-    // const context = useContext(MyContext)
-    // const url = context.AppUrl
     const setProductActionIndex = (index) => {
       setProActionIndex(index);
     };

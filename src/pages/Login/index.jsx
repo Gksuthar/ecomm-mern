@@ -7,12 +7,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { MyContext } from "../../App";
 import axios from "axios";
+import { TailSpin } from "react-loader-spinner";
+
 
 const Login = () => {
   const context = useContext(MyContext);
   const url = context.AppUrl;
   const navigate = useNavigate();
   const [isShowPassword, setisShowPassword] = useState(false);
+  const [loading,setLoading] = useState(false)
   const [formField, setFormField] = useState({
     email: "",
     password: "",
@@ -27,6 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       console.log(formField.email + "and" + formField.password);
       if (formField.email==='') {
         context.openAlertBox("error", "Please Enter email");
@@ -38,7 +42,6 @@ const Login = () => {
         email: formField.email,
         password: formField.password,
       },);
-    //   alert(response.data.message)
       if (response.status === 200) {
         context.openAlertBox("success", "Login successfully");
         context.setIsLogin(true)
@@ -60,6 +63,8 @@ const Login = () => {
             alert("Error:", error.message);
             context.openAlertBox('error',error.message)
         }
+    }finally{
+      setLoading(false)
     }
     
   };
@@ -72,7 +77,6 @@ const Login = () => {
      try {
       localStorage.setItem('userEmail',formField.email)
       let currentSituation = localStorage.setItem('forgetPassword','true')
-      // const for = localStorage.getItem('forgetPassword')
       const resposne = await axios.post(`${url}/api/user/forgetpassword`,{email:formField.email});
       if (resposne.status===200 ) { 
         context.openAlertBox("success", "Otp Send");
@@ -135,9 +139,16 @@ const Login = () => {
               forget password
             </a>
             <div className="flex items-center w-full mt-3 btn-lg">
-              <Button className="btn-org w-full" type="submit">
-                Login
-              </Button>
+              <Button className="btn-org w-full" type="submit">{loading ? (<TailSpin
+                          visible={true}
+                          height="23"
+                          width="23"
+                          color="#4fa94d"
+                          ariaLabel="tail-spin-loading"
+                          radius="1"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />) : ('Login') }</Button>
             </div>
             <p className="text-center mb-1">
               Not registred?{" "}

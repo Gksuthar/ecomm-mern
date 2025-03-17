@@ -42,6 +42,7 @@ function App() {
   const [allProduct, setAllProduct] = useState([]);
   const [allFeatureProduct, setAllFeatureProduct] = useState([]);
   const [data, setData] = useState();
+  
   localStorage.setItem("forgetPassword", "true");
   const [cartLen, setCartLen] = useState(0);
   const [openCategoryId, setOpenCategoryId] = useState(null);
@@ -51,6 +52,7 @@ function App() {
   const [activeSubCategory, setActiveSubCategory] = useState(null);
   const [loadThristCat, setLoadThirstCat] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (activeSubCategory) {
@@ -95,6 +97,7 @@ function App() {
   const getProductById = async (id) => {
     try {
       handleOpenProductDetailsModal(true);
+      setLoading(true);
       const token = localStorage.getItem("accessToken");
       const response = await axios.get(`${AppUrl}/api/product/${id}`, {
         headers: {
@@ -114,6 +117,8 @@ function App() {
       } else {
         console.error("Error:", error.message);
       }
+    }finally {
+      setLoading(false); 
     }
   };
 
@@ -264,6 +269,7 @@ function App() {
     openSidebarFunction,
     isOpenSidebar,
     logout,
+    loading
   };
   return (
     <>
@@ -282,7 +288,6 @@ function App() {
             <Route path="/verify" element={<Verify />}></Route>
             <Route path="/newpassword" element={<ForgetPassword />}></Route>
             <Route path="/my-account" element={<MyAccount />}></Route>
-            {/* <Route path="/productListing/:category" component={CategoryProductListning} /> */}
             <Route path="/myList" element={<WhichList />}></Route>
             <Route path="/orders" element={<Orders />}></Route>
             <Route path="/checkout" element={<Checkout />}></Route>
@@ -324,7 +329,6 @@ function App() {
           </Typography>
         </DialogContent>
       </Dialog>
-      {/*Cart Panel  */}
       <Drawer open={openCartPanel} anchor="right" className="cartBar">
         <div className="flex items-center gap-3 py-3 px-5 justify-between text-[15px] font-[500] border-b border-[rgba(0,0,0,0.2)]">
           <h4 className="">Shopping Cart ({cartLen})</h4>

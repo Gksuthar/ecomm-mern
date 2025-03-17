@@ -29,7 +29,6 @@ const ProductListing = () => {
   return (
     <section className="py-4 bg-gray-100 min-h-screen pb-0">
       <div className="container mx-auto px-4">
-        {/* Breadcrumbs */}
         <Breadcrumbs aria-label="breadcrumb" className="mb-4">
           <Link underline="hover" color="inherit" href="/" className="text-blue-600 hover:underline">
             Home
@@ -39,9 +38,7 @@ const ProductListing = () => {
           </Link>
         </Breadcrumbs>
 
-        {/* Layout Wrapper */}
         <div className="bg-white p-4 rounded-md shadow-md flex flex-col md:flex-row gap-4">
-          {/* Sidebar */}
           <div className="w-full md:w-[20%] bg-white border-r border-gray-300 min-h-[80vh] p-3">
             <SidebarListning />
           </div>
@@ -66,7 +63,6 @@ const ProductListing = () => {
                 </span>
               </div>
 
-              {/* Right Controls */}
               <div className="flex items-center gap-3 mt-4 md:mt-0">
                 <span className="text-[14px] font-medium text-gray-700">Sort By:</span>
                 <Button

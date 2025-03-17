@@ -2,15 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import UserSiteBarManager from "../../components/userSiteBarManager/index";
 import { MyContext } from "../../App";
+import { Audio } from "react-loader-spinner";
+import useFetch from "../../Context/getDataContext.jsx";
+import { InfinitySpin } from "react-loader-spinner";
 
 const MyAccount = () => {
   const [user, setUser] = useState({ name: "", email: "", mobile: "" });
   const context = useContext(MyContext);
   const url = context.AppUrl;
   const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [token, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,44 +29,54 @@ const MyAccount = () => {
     }));
   };
 
+  const {
+    data: fetchedData,
+    loading,
+    error,
+  } = useFetch(`${url}/api/user/user-details`, token);
+
   useEffect(() => {
     if (!context.isLogin) {
       navigate("/");
-    } else {
-      const getUserData = async () => {
-        try {
-          const token = localStorage.getItem("accessToken");
-          const response = await axios.get(`${url}/api/user/user-details`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.status === 200) {
-            setUser(response.data.data);
-          }
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      };
-
-      getUserData();
+      return;
     }
-  }, [context?.isLogin]);
+
+    if (fetchedData) {
+      setUser(fetchedData);
+    }
+  }, [context.isLogin, fetchedData, navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <InfinitySpin
+          visible={true}
+          width="200"
+          color="#4fa94d"
+          ariaLabel="infinity-spin-loading"
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-center">
+        Error: {error.message || "An error occurred"}
+      </div>
+    );
+  }
 
   return (
     <div className="py-10 w-full">
       <div className="container flex flex-col lg:flex-row gap-5">
-        {/* <div className="w-full "> */}
-          <UserSiteBarManager />
-        {/* </div> */}
+        <UserSiteBarManager />
 
-        {/* Profile Section - Full Width on Small Screens */}
         <div className="col2 w-full lg:w-[70%] mt-4">
           <div className="card bg-white p-5 shadow-md rounded-md">
             <h2 className="pb-3 text-[18px] font-[500]">My Profile</h2>
             <hr />
             <form className="mt-4">
-              {/* Input Fields - Full Width on Small Screens */}
               <div className="flex flex-col sm:flex-row items-center gap-5">
                 <div className="w-full sm:w-[50%]">
                   <TextField

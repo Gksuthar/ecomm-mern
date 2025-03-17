@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
-import UserSiteBarManager from '../../components/userSiteBarManager/index';
-import { Button } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import React, { useState, useEffect, useContext } from "react";
+import UserSiteBarManager from "../../components/userSiteBarManager/index";
+import { Button } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
 import { IoMdClose } from "react-icons/io";
-import axios from 'axios';
-import { MyContext } from '../../App';
+import axios from "axios";
+import { MyContext } from "../../App";
 import { GoDownload } from "react-icons/go";
-
+import useFetch from "../../Context/getDataContext.jsx";
+import { InfinitySpin } from "react-loader-spinner";
 
 const Orders = () => {
   const [isOpenProductDetails, setIsOpenProductDetails] = useState(false);
@@ -22,7 +23,7 @@ const Orders = () => {
   const handleOpenProductDetails = (id) => {
     const order = orders.find((item) => item._id === id);
     console.log(order);
-    
+
     setPerticulerOrder(order);
     setIsOpenProductDetails(true);
   };
@@ -32,37 +33,39 @@ const Orders = () => {
     setPerticulerOrder(null);
   };
 
+  const token = localStorage.getItem("accessToken");
+  const {
+    data: fetchData,
+    loading,
+    error,
+  } = useFetch(`${url}/api/order/`, token);
+
   useEffect(() => {
-    const getOrder = async () => {
-      try {
-        const token = localStorage.getItem('accessToken');
-        console.log('Token:', token);  
-        console.log('API URL:', url);  
+    if (fetchData) {
+      console.log(JSON.stringify(fetchData));
 
-        const response = await axios.get(`${url}/api/order/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      setOrders(fetchData);
+    }
+  }, [fetchData]);
 
-        if (response.status === 200) {
-          console.log('API Response:', response.data.data);
-          setOrders(response.data.data)
-        }
-      } catch (error) {
-        console.error('Error Message:', error.message);         // Detailed error message
-      }
-    };
-    getOrder();
-  }, []);
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
 
+      <InfinitySpin
+        visible={true}
+        width="200"
+        color="#4fa94d"
+        ariaLabel="infinity-spin-loading"
+      />
+      </div>
+    );
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="py-10 w-full">
       <div className="container flex gap-5">
-        {context.windowWidth > 475 &&
-          <UserSiteBarManager />
-        }
+        {context.windowWidth > 475 && <UserSiteBarManager />}
         <div className="productItem rounded-sm border border-[rgba(0,0,0,0.1)] w-[100%] sm:w-[75%] bg-white shadow-md mt-4 p-4">
           <h2 className="text-xl font-bold mb-2">My Orders</h2>
           <p className="mb-4">There are {orders.length} Orders</p>
@@ -99,14 +102,25 @@ const Orders = () => {
                       </Button>
                     </td>
                     <td className="px-6 py-4">{item.userId.name}</td>
-                    <td className="px-6 py-4">{item.delivery_address.mobile}</td>
-                    <td className="px-6 py-4">{item.delivery_address.address_line}</td>
-                    <td className="px-6 py-4">{item.delivery_address.pincode}</td>
+                    <td className="px-6 py-4">
+                      {item.delivery_address.mobile}
+                    </td>
+                    <td className="px-6 py-4">
+                      {item.delivery_address.address_line}
+                    </td>
+                    <td className="px-6 py-4">
+                      {item.delivery_address.pincode}
+                    </td>
                     <td className="px-6 py-4">{item.productId.price}</td>
                     <td className="px-6 py-4">{item.userId.email}</td>
                     <td className="px-6 py-4">Delivered</td>
                     <td className="px-6 py-4">{item.createdAt}</td>
-                    <td className="px-6 py-4  !flex justify-center !items-center "><GoDownload onClick={context.downloadPDF} className='cursor-pointer text-[20px]' /></td>
+                    <td className="px-6 py-4  !flex justify-center !items-center ">
+                      <GoDownload
+                        onClick={context.downloadPDF}
+                        className="cursor-pointer text-[20px]"
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -115,7 +129,12 @@ const Orders = () => {
         </div>
       </div>
 
-      <Dialog open={isOpenProductDetails} onClose={handleCloseProductDetails} maxWidth="md" fullWidth>
+      <Dialog
+        open={isOpenProductDetails}
+        onClose={handleCloseProductDetails}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>
           <div className="flex justify-between items-center">
             <span>Product Details</span>
@@ -138,16 +157,28 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                  <tr  className="bg-white border-b hover:bg-gray-50">
-                    <td className="px-6 py-4">{perticulerOrder.productId._id}</td>
-                    <td className="px-6 py-4">{perticulerOrder.productId.name.substring(0,50)}...</td>
-                    <td className="px-6 py-4">
-                      <img src={perticulerOrder.productId.images[0]} alt="Product" className="w-20 h-20" />
-                    </td>
-                    <td className="px-6 py-4">{perticulerOrder.quantity || 1} </td>
-                    <td className="px-6 py-4">{perticulerOrder.productId.price}</td>
-                    <td className="px-6 py-4">{perticulerOrder.productId.price * 1}</td>
-                  </tr>
+                <tr className="bg-white border-b hover:bg-gray-50">
+                  <td className="px-6 py-4">{perticulerOrder.productId._id}</td>
+                  <td className="px-6 py-4">
+                    {perticulerOrder.productId.name.substring(0, 50)}...
+                  </td>
+                  <td className="px-6 py-4">
+                    <img
+                      src={perticulerOrder.productId.images[0]}
+                      alt="Product"
+                      className="w-20 h-20"
+                    />
+                  </td>
+                  <td className="px-6 py-4">
+                    {perticulerOrder.quantity || 1}{" "}
+                  </td>
+                  <td className="px-6 py-4">
+                    {perticulerOrder.productId.price}
+                  </td>
+                  <td className="px-6 py-4">
+                    {perticulerOrder.productId.price * 1}
+                  </td>
+                </tr>
               </tbody>
             </table>
           ) : (

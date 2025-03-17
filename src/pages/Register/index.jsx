@@ -7,11 +7,14 @@ import { Form, Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import axios from 'axios'
 import { MyContext } from '../../App';
+import { TailSpin } from "react-loader-spinner";
+
 const Register = () => {
     const context = useContext(MyContext)
     const [isShowPassword,setisShowPassword] = useState(false)
     const url = context.AppUrl
     const navigate = useNavigate()
+    const [loading,setLoading] = useState(false)
     const [FormField,setFormField] = useState({
         name:"",
         email:"",
@@ -30,6 +33,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            setLoading(true)
             const response = await axios.post(`${url}/api/user/register`, FormField);
             console.log('Registration successful', response);
             if (response.data.success===true || response.status===201) {
@@ -41,6 +45,8 @@ const Register = () => {
         } catch (error) {
                 context.openAlertBox("false", error.message || "An unexpected error occurred");
              console.error('Error during registration', error);
+        }finally{
+            setLoading(false)
         }
     }
     
@@ -68,8 +74,16 @@ const Register = () => {
                     </div>
                 <a className='link cursor-pointer text-[14px] mb-1 font-[600]' href="">forget password</a>
                 <div className='flex items-center w-full mt-3 btn-lg'>
-                    <Button type='submit' className='btn-org w-full'><Link to='/'>Sign Up</Link></Button>
-                </div>
+<Button className="btn-org w-full" type="submit">{loading ? (<TailSpin
+                          visible={true}
+                          height="23"
+                          width="23"
+                          color="#4fa94d"
+                          ariaLabel="tail-spin-loading"
+                          radius="1"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                        />) : ('Login') }</Button>                </div>
                 <p className='text-center text-[14px] mb-1'>Do You have already Account? <Link to='/Login' className=' link text-[14px] font-[600 ]'>Login</Link> </p>
 
                 <p className='text-center text-[12px] font-[500] mb-2 mt-4'>Or continue With Social Account </p>
