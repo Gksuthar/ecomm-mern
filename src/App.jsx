@@ -53,7 +53,7 @@ function App() {
   const [loadThristCat, setLoadThirstCat] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [loading, setLoading] = useState(false);
-
+  const [search,setSearch] = useState('');
   useEffect(() => {
     if (activeSubCategory) {
       try {
@@ -94,6 +94,14 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    try {
+      setAllProduct(allProduct.filter(item=>item.brand.toLowerCase().includes(search.toLowerCase()) || item.description.toLowerCase().includes(search.toLowerCase()) || item.name.toLowerCase().includes(search.toLowerCase())))
+    } catch (error) {
+      console.error(error);
+    }
+  }, [search])
+  
   const getProductById = async (id) => {
     try {
       handleOpenProductDetailsModal(true);
@@ -275,7 +283,7 @@ function App() {
     <>
       <>
         <MyContext.Provider value={values}>
-          <Header />
+          <Header setSearch={setSearch} search={search} />
           <Routes>
             <Route path="/" element={<Home />}></Route>
             <Route path="/Login" element={<Login />}></Route>

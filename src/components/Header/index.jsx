@@ -23,7 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
 import { AiOutlineMenu } from "react-icons/ai";
 
-const Header = () => {
+const Header = ({setSearch,search}) => {
   const context = useContext(MyContext);
   const url = context.AppUrl;
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ const Header = () => {
             </Link>
           </div>
           <div className="hidden sm:block col2 w-[33%] sm:w-[43%] ">
-            <Search />
+            <Search setSearch={setSearch} search={search}/>
           </div>
           <div className="col3 sm:w-[32%]  w-[33%]  flex  items-center pl-5 ">
             <ul className="w-full flex items-center  justify-end gap-1 sm:gap-3 ">

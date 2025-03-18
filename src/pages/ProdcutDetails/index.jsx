@@ -394,8 +394,10 @@ const ProductDetails = () => {
         <div className="container ">
           <h2 className="text-[20px] font-[600] pb-1 mt-8">Related Product</h2>
         </div>
-        <ProductsSlider items={6} />
-        <div className="container"></div>
+        <ProductsSlider items={6} selectedTab={data?.catName} />
+        {/* <div className="container">
+
+        </div> */}
       </section>
     </>
   );
