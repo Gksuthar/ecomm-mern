@@ -31,6 +31,8 @@ import Checkout from "./components/checkout/index";
 import "swiper/css";
 import axios from "axios";
 import { jsPDF } from "jspdf";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import WhichList from "./components/whichlist";
 const MyContext = createContext();
 function App() {
@@ -42,7 +44,7 @@ function App() {
   const [allProduct, setAllProduct] = useState([]);
   const [allFeatureProduct, setAllFeatureProduct] = useState([]);
   const [data, setData] = useState();
-  
+
   localStorage.setItem("forgetPassword", "true");
   const [cartLen, setCartLen] = useState(0);
   const [openCategoryId, setOpenCategoryId] = useState(null);
@@ -53,7 +55,7 @@ function App() {
   const [loadThristCat, setLoadThirstCat] = useState(false);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [loading, setLoading] = useState(false);
-  const [search,setSearch] = useState('');
+  const [search, setSearch] = useState("");
   useEffect(() => {
     if (activeSubCategory) {
       try {
@@ -96,12 +98,19 @@ function App() {
 
   useEffect(() => {
     try {
-      setAllProduct(allProduct.filter(item=>item.brand.toLowerCase().includes(search.toLowerCase()) || item.description.toLowerCase().includes(search.toLowerCase()) || item.name.toLowerCase().includes(search.toLowerCase())))
+      setAllProduct(
+        allProduct.filter(
+          (item) =>
+            item.brand.toLowerCase().includes(search.toLowerCase()) ||
+            item.description.toLowerCase().includes(search.toLowerCase()) ||
+            item.name.toLowerCase().includes(search.toLowerCase())
+        )
+      );
     } catch (error) {
       console.error(error);
     }
-  }, [search])
-  
+  }, [search]);
+
   const getProductById = async (id) => {
     try {
       handleOpenProductDetailsModal(true);
@@ -125,8 +134,8 @@ function App() {
       } else {
         console.error("Error:", error.message);
       }
-    }finally {
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -277,7 +286,7 @@ function App() {
     openSidebarFunction,
     isOpenSidebar,
     logout,
-    loading
+    loading,
   };
   return (
     <>

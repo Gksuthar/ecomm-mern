@@ -6,7 +6,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { Button } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import useFetch from '../../Context/getDataContext.jsx';
+import useFetch from '../../DataFetch/getDataContext.jsx';
 import { InfinitySpin } from "react-loader-spinner";
 
 const Wishlist = () => {

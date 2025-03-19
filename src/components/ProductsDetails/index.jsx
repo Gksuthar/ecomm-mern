@@ -50,6 +50,8 @@
         console.error(error)
       }
     }
+
+    
     return (
       <div className="">
         <h1 className="text-[22px] font-[600] mb-2"> {data?.name}</h1>

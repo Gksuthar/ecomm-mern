@@ -26,7 +26,6 @@ const Checkout = () => {
     totalSellingPrice + PLATFORM_CHARGE + SHIPPING_CHARGE
   );
 
-  // Fetch cart data
   useEffect(() => {
     const getCartData = async () => {
       try {
@@ -106,10 +105,6 @@ const Checkout = () => {
         { amount: finalAmount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // productId: cartData[0].productId._id,
-      //             Quantity: cartData[0].quantity,
-
       const options = {
         key: "rzp_test_KRIIvltHQ0dIqz",
         amount: data.amount,

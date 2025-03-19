@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import UserSiteBarManager from "../../components/userSiteBarManager/index";
 import { MyContext } from "../../App";
 import { Audio } from "react-loader-spinner";
-import useFetch from "../../Context/getDataContext.jsx";
+import useFetch from "../../DataFetch/getDataContext.jsx";
 import { InfinitySpin } from "react-loader-spinner";
 
 const MyAccount = () => {

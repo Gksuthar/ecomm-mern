@@ -138,7 +138,7 @@ const ProductItemListView = ({category}) => {
                   {item.description.substring(0, 250)}...
                 </p>
                 <div className="mt-3">
-                  <Button onClick={()=>addToCart(item?._id,1)} className="btn-org hover:!bg-black transition-all duration-300 flex gap-2">
+                  <Button onClick={()=>addToCart(item?._id)} className="btn-org hover:!bg-black transition-all duration-300 flex gap-2">
                     <IoCartOutline className="text-[18px]" />
                     ADD TO CART
                   </Button>
