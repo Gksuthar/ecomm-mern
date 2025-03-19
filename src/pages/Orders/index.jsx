@@ -111,7 +111,7 @@ const Orders = () => {
                     <td className="px-6 py-4">
                       {item.delivery_address.pincode}
                     </td>
-                    <td className="px-6 py-4">{item.productId.price}</td>
+                    <td className="px-6 py-4">{item?.productId?.price}</td>
                     <td className="px-6 py-4">{item.userId.email}</td>
                     <td className="px-6 py-4">Delivered</td>
                     <td className="px-6 py-4">{item.createdAt}</td>
