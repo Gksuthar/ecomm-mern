@@ -57,7 +57,7 @@ const ProductItem = ({ item }) => {
       }
     };
     getCartData();
-  }, [url, token,cartData]);
+  }, [url, token,cartData,setCartData]);
 
   const isProductInCart = cartData.some(
     (cartItem) => cartItem?.productId?._id === item?._id
