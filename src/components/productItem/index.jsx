@@ -50,15 +50,15 @@ const ProductItem = ({ item }) => {
     const getCartData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:1000/api/cart/get`, {
+        const response = await axios.get(`https://mernecommbackend-d6vr.onrender.com/api/cart/get`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
           setCartData(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching cart data: " + error.message);
-        toast.error("Failed to fetch cart data");
+        console.error("Error fetching cart data: " + error);
+        // toast.error("Failed to fetch cart data");
       } finally {
         setLoading(false);
       }
@@ -139,7 +139,7 @@ const ProductItem = ({ item }) => {
   }
 
   return (
-    <div className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] border border-gray-300 shadow-md">
+    <div className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.2)]  border-gray-300 shadow-md">
       <div className="group imgWrapper w-full rounded-md relative shadow-sm">
         <Link to={`/productDetails/${item?._id}`}>
           <div className="img h-[220px] overflow-hidden relative">
