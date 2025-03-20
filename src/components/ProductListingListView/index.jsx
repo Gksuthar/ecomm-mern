@@ -14,7 +14,7 @@ import Pagination from '@mui/material/Pagination';
 
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-const ProductItemListView = ({category}) => {
+const ProductItemListView = ({category,sortBy }) => {
    const [filteredProducts, setFilteredProducts] = useState([]);
     const context = useContext(MyContext);
     const url = context.AppUrl
@@ -28,16 +28,38 @@ const ProductItemListView = ({category}) => {
     const handlePageChange = (event, value) => {
       setCurrentPage(value);
     };
-    useEffect(() => {
-      if (context.allProduct && category) {
-          const result = context.allProduct.filter(
-            (pro) => pro.catName === category
-  
+      useEffect(() => {
+        if (context.allProduct && category) {
+          let result = context.allProduct.filter((pro) =>
+            Array.isArray(category)?category.includes(pro.catName) : pro.catName === category
           );
+          result = getSortedProduct(result,sortBy)
           setFilteredProducts(result);
+        }else{
+          setFilteredProducts([])
         }
-        
-      }, [category, context.allProduct]); 
+      }, [category, context.allProduct,sortBy]);
+
+      const getSortedProduct=(products,sortBy)=>{
+        const sorted= [...products]
+        switch(sortBy){
+          case "Relevance":
+            return sorted;
+          case "Sales, highest to lowest":
+            return sorted.sort((a,b)=>(b.sales || 0) - (a.sales || 0))
+          case "Price, high to low" :
+            return sorted.sort((a,b)=>b.price-a.price)
+          case "Price, low to high" :
+            return sorted.sort((a,b)=>a.price-b.price)
+          case "Name, A to Z":
+            return sorted.sort((a,b)=>a.name.localeCompare(b.name))
+          case "Name, Z to A" :
+            return sorted.sort((a,b)=>b.name.localeCompare(a.name))
+          default:
+            return sorted;        
+    
+        }
+      }
       const addProductInWichList = async (id, rating, price, oldPrice, brand, discount) => {
         try {
           const token = localStorage.getItem("accessToken");
