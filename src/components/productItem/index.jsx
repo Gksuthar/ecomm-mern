@@ -237,7 +237,7 @@ const ProductItem = ({ item }) => {
         ) : (
           <Button
             onClick={() => addToCart(item._id)}
-            className="btn-org sm:w-full !mt-2 flex gap-3"
+            className="btn-org sm:w-full !mt-2 flex gap-1 sm:gap-3"
           >
             <CiShoppingCart className="text-xl sm:text-2xl" />
             Add to Cart
