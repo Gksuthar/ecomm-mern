@@ -195,10 +195,10 @@ const ProductItem = ({ item }) => {
       </div>
       <div className="info p-3 py-3 bg-[#ecebeb]">
         <h6 className="text-[14px] link transition-all">
-          <Link to="/productListning">{item?.brand}</Link>
+          <Link to="/productListning">{item?.brand.substring(0,8)}</Link>
         </h6>
         <h3 className="text-[13px] title font-[500] text-[#000] link transition-all mb-1">
-          <Link to="/productListning">{item?.name.substring(0, 30)}...</Link>
+          <Link to="/productListning">{item?.name.substring(0, 15)}...</Link>
         </h3>
         <Rating
           name="size-small"

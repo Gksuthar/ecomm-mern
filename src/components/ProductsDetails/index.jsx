@@ -90,16 +90,16 @@
           {data?.description}
         </p>
 
-        <div className="flex items-center gap-2 mt-3">
+        <div className="flex items-center gap-2 mt-3 ">
           <span className="text-[13px] font-[600]">Size :</span>
-          <div className="flex items-center gap-2 actions  ">
+          <div className="flex items-center gap-2 actions   ">
           {data.size.map((item, index) => (
   <Button
     key={index}
     onClick={() => setProductActionIndex(index)}
     className={`${
-      productActionIndex === index ? "!bg-primary !text-white" : ""
-    } !text-[12px] !px-1 !h-[30px] !w-[40px] !min-w-[40px] `}
+      productActionIndex === index ? "!bg-primary  !text-white" : ""
+    } !text-[12px]  !h-[30px] !w-[50px] !min-w-[50px] `}
   >
     {item}
   </Button>
