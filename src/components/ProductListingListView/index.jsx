@@ -15,7 +15,6 @@ import Pagination from '@mui/material/Pagination';
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
 const ProductItemListView = ({category}) => {
-    // const {category} = useParams();
    const [filteredProducts, setFilteredProducts] = useState([]);
     const context = useContext(MyContext);
     const url = context.AppUrl
@@ -32,7 +31,7 @@ const ProductItemListView = ({category}) => {
     useEffect(() => {
       if (context.allProduct && category) {
           const result = context.allProduct.filter(
-            (pro) => pro.thirdSubCat === category
+            (pro) => pro.catName === category
   
           );
           setFilteredProducts(result);
@@ -128,7 +127,7 @@ const ProductItemListView = ({category}) => {
                   <Link to="/">{item.title}</Link>
                 </h3>
                 <Rating name="size-small" defaultValue={item.rating} size="small" readOnly />
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 !bg-[#ecebeb] !bg-gray-250">
                   <span className="price line-through text-gray-500 text-[15px] font-[600]">
                   ₹ {item.oldPrice}
                   </span>
@@ -137,7 +136,7 @@ const ProductItemListView = ({category}) => {
                 <p className="text-[12px] text-gray-500 mb-3">
                   {item.description.substring(0, 250)}...
                 </p>
-                <div className="mt-3">
+                <div className="mt-3 !bg-[#ecebeb]">
                   <Button onClick={()=>addToCart(item?._id)} className="btn-org hover:!bg-black transition-all duration-300 flex gap-2">
                     <IoCartOutline className="text-[18px]" />
                     ADD TO CART

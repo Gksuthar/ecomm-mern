@@ -15,24 +15,26 @@
     const setProductActionIndex = (index) => {
       setProActionIndex(index);
     };
-    const addToCart=async(id)=>{
-      
-      try {
-        const token = localStorage.getItem('accessToken')
-        const response = await axios.post(`https://mernecommbackend-d6vr.onrender.com/api/cart/create`,   {productId:id,quantity: quantity} ,{
-          headers:{
-            Authorization : `Bearer ${token}`
-          }
-        })
-        if (response.status===200) {
-          toast.success(response.data.message)
-
-        }
-        
-      } catch (error) {
-        console.error(error)
-      }
+    const addToCart = async (id) => {
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      toast.error("Please log in to add items to cart");
+      return;
     }
+    const response = await axios.post(
+      `https://mernecommbackend-d6vr.onrender.com/api/cart/create`,
+      { productId: id, quantity: quantity },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (response.status === 200) {
+      toast.success(response.data.message);
+    }
+  } catch (error) {
+    console.error("Add to Cart Error:", error);
+    toast.error("Failed to add to cart");
+  }
+};
 
     const addProductInWichList=async(id,rating,price,oldPrice,brand,discount)=>{
       try {

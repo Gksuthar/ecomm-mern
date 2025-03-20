@@ -33,28 +33,29 @@ const CategorySlider = () => {
             },
           }}
         >
-          <SwiperSlide>
-            <Link to="/productListning/Smart-Tablet">
-              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
-                <img
-                  src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/11-cz_categoryimagelist.jpg"
-                  alt="Smart Tablet"
-                  className="transition-all"
-                />
-                <h3 className="text-[16px] font-[500] mt-3">Smart Tablet</h3>
-              </div>
-            </Link>
-          </SwiperSlide>
+          
 
           <SwiperSlide>
-            <Link to="/productListning/T-Shirts">
+            <Link to="/productListning/Fashion">
               <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/12-cz_categoryimagelist.jpg"
                   alt="Smart Tablet"
                   className="transition-all"
                 />
-                <h3 className="text-[16px] font-[500] mt-3">Smart Tablet</h3>
+                <h3 className="text-[16px] font-[500] mt-3">Fashion</h3>
+              </div>
+            </Link>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Link to="/productListning/Electronics">
+              <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
+                <img
+                  src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/11-cz_categoryimagelist.jpg"
+                  alt="Smart Tablet"
+                  className="transition-all"
+                />
+                <h3 className="text-[16px] font-[500] mt-3">Electronics</h3>
               </div>
             </Link>
           </SwiperSlide>

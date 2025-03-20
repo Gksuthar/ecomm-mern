@@ -12,66 +12,59 @@ import toast from "react-hot-toast";
 import { CiShoppingCart } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
-import QtyBox from "../QtyBox";
+
 const ProductItem = ({ item }) => {
   const [quantity, setQuantity] = useState(1);
-  const [count, setCount] = useState(1);
   const [isLoading, setLoading] = useState(false);
   const [cartData, setCartData] = useState([]);
   const context = useContext(MyContext);
   const url = context.AppUrl;
   const token = localStorage.getItem("accessToken");
+
   useEffect(() => {
     setLoading(true);
     if (item) {
       setLoading(false);
     }
-  }, );
+  }, [item]);
 
   const addToCart = async (id) => {
     try {
-      setLoading(true)
-      const token = localStorage.getItem("accessToken");
+      setLoading(true);
       const response = await axios.post(
         `${url}/api/cart/create`,
         { productId: id, quantity: quantity },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
         toast.success(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-    }finally{
-      setLoading(true)
+      toast.error("Failed to add to cart");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const getCartData = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
-        const response = await axios.get(`${url}/api/cart/get`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await axios.get(`http://localhost:1000/api/cart/get`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (response.status === 200) {
           setCartData(response.data.data);
         }
       } catch (error) {
-        console.log("Error fetching cart data:", error);
-      }
-      finally{
-        setLoading(false)
+        console.error("Error fetching cart data: " + error.message);
+        toast.error("Failed to fetch cart data");
+      } finally {
+        setLoading(false);
       }
     };
     getCartData();
-  }, [url, token, cartData, setCartData]);
+  }, [url, token,setCartData]);
 
   const isProductInCart = cartData.some(
     (cartItem) => cartItem?.productId?._id === item?._id
@@ -82,12 +75,10 @@ const ProductItem = ({ item }) => {
   )?.quantity;
 
   const updateQty = async (id, qty) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const token = localStorage.getItem("accessToken");
       const response = await axios.put(
         `${url}/api/cart/update-cart`,
-
         { productId: id, qty },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -101,13 +92,13 @@ const ProductItem = ({ item }) => {
         );
       }
     } catch (error) {
-      console.error("Error updating quantity:", error);
-    }finally{
-      setLoading(false)
+      toast.error("Error updating quantity");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const addProductInWichList = async (
+  const addProductInWishlist = async (
     id,
     rating,
     price,
@@ -116,23 +107,19 @@ const ProductItem = ({ item }) => {
     discount
   ) => {
     try {
-      const token = localStorage.getItem("accessToken");
       const response = await axios.post(
         `${url}/api/mylist/addToMyList`,
         { productId: id, rating, price, oldPrice, brand, discount },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 201) {
-        toast.success("The product is added to the wishlist");
+        toast.success("Added to wishlist");
       }
     } catch (error) {
-      console.error(error);
+      toast.error("Failed to add to wishlist");
     }
   };
+
   if (isLoading) {
     return (
       <div className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] border border-gray-300 shadow-md animate-pulse">
@@ -150,6 +137,7 @@ const ProductItem = ({ item }) => {
       </div>
     );
   }
+
   return (
     <div className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] border border-gray-300 shadow-md">
       <div className="group imgWrapper w-full rounded-md relative shadow-sm">
@@ -178,7 +166,7 @@ const ProductItem = ({ item }) => {
           </Button>
           <Button
             onClick={() =>
-              addProductInWichList(
+              addProductInWishlist(
                 item._id,
                 item.rating,
                 item.price,
@@ -195,7 +183,7 @@ const ProductItem = ({ item }) => {
       </div>
       <div className="info p-3 py-3 bg-[#ecebeb]">
         <h6 className="text-[14px] link transition-all">
-          <Link to="/productListning">{item?.brand.substring(0,8)}</Link>
+          <Link to="/productListning">{item?.brand.substring(0, 8)}</Link>
         </h6>
         <h3 className="text-[13px] title font-[500] text-[#000] link transition-all mb-1">
           <Link to="/productListning">{item?.name.substring(0, 15)}...</Link>
@@ -206,7 +194,7 @@ const ProductItem = ({ item }) => {
           size="small"
           readOnly
         />
-        <div className="flex items-center justify-between  !bg-[#ecebeb]">
+        <div className="flex items-center justify-between !bg-[#ecebeb]">
           <span className="price line-through text-gray-500 text-[15px] font-[600]">
             ₹{item?.oldPrice}
           </span>
@@ -222,11 +210,9 @@ const ProductItem = ({ item }) => {
             >
               <CiCircleMinus className="text-xl" />
             </button>
-
             <span className="flex-1 text-center text-lg">
               {productQuantityInCart}
             </span>
-
             <button
               onClick={() => updateQty(item?._id, productQuantityInCart + 1)}
               className="bg-gray-900 text-white w-10 h-10 flex items-center justify-center"
