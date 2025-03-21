@@ -14,7 +14,8 @@ const ProductListing = () => {
   const [selectedCategory, setSelectedCategory] = useState(category || []);
   const [itmView, setItmView] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [sortBy, setSortBy] = useState("Relevance"); // New state for sorting
+  const [sortBy, setSortBy] = useState("Relevance"); 
+  const [priceRange, setPriceRange] = useState([100, 50000])
 
   const open = Boolean(anchorEl);
 
@@ -54,6 +55,9 @@ const ProductListing = () => {
             <SidebarListning
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              
             />
           </div>
 
@@ -155,11 +159,15 @@ const ProductListing = () => {
                 <CategoryProductListning
                   category={selectedCategory}
                   sortBy={sortBy}
+                  priceRange={priceRange}
+                  setPriceRange={setPriceRange}
                 />
               ) : (
                 <ProductItemListView
                   category={selectedCategory}
                   sortBy={sortBy}
+                  priceRange={priceRange}
+                  setPriceRange={setPriceRange}
                 />
               )}
             </div>

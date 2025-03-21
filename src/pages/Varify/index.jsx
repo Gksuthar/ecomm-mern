@@ -27,7 +27,6 @@ const Verify = () => {
             context.openAlertBox('success','Your Otp is Verified')
             navigate('/')
           }else{
-            // context.openAlertBox('success','Your Otp is Verified')
             navigate('/newpassword')
 
           }

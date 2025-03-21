@@ -6,15 +6,13 @@ import "./style.css";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import { MyContext } from "../../App";
-
-const SidebarListning = ({ selectedCategory, setSelectedCategory }) => {
+const SidebarListning = ({ selectedCategory,setSelectedCategory,priceRange,setPriceRange }) => {
   const context = useContext(MyContext);
-
+  // const [priceRange, setPriceRange] = useState([100, 100000])
   return (
     <aside className="sidebar-listning py-6 px-4 rounded-lg shadow-lg bg-white">
       <h1 className="border-b pb-2 text-[18px] font-[600] mb-1">Filter By</h1>
 
-      {/* Availability Section */}
       <div className="box mb-4">
         <h3 className="mb-1 text-sm font-semibold text-black ml-2 mt-4 pb-2">
           Availability
@@ -37,24 +35,22 @@ const SidebarListning = ({ selectedCategory, setSelectedCategory }) => {
         </div>
       </div>
 
-      {/* Filter By Price */}
       <div className="box mt-4">
         <h3 className="mb-1 text-sm font-semibold text-black ml-2 mt-4 pb-2">
           Filter By Price
         </h3>
-        <RangeSlider className="" />
+        <RangeSlider min={0} value={priceRange} max={50000} onInput={(value) =>setPriceRange(value)} step={1000}/>
 
         <div className="flex justify-between items-center pt-2 pb-2 priceRange px-4">
           <span className="text-sm font-medium text-gray-700 flex items-center gap-1">
-            From: <strong className="text-[11px] text-black font-semibold">Rs: 100</strong>
+            From: <strong className="text-[11px] text-black font-semibold">Rs: {priceRange[0]}</strong>
           </span>
           <span className="text-sm font-medium text-gray-700 flex items-center gap-1">
-            To: <strong className="text-[11px] text-black font-semibold">Rs: 500</strong>
+            To: <strong className="text-[11px] text-black font-semibold">Rs: {priceRange[1]}</strong>
           </span>
         </div>
       </div>
 
-      {/* Size Section */}
       <div className="box mb-4">
         <h3 className="mb-1 text-sm font-semibold text-black ml-2 pb-2">Size</h3>
         <div className="scroll px-2">

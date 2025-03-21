@@ -13,7 +13,7 @@ import { CiShoppingCart } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
 
-const CategoryProductListning = ({ category,sortBy }) => {
+const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [cartData, setCartData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,11 +35,17 @@ const CategoryProductListning = ({ category,sortBy }) => {
         Array.isArray(category)?category.includes(pro.catName) : pro.catName === category
       );
       result = getSortedProduct(result,sortBy)
+      result = shortProductByPriceRange(result,priceRange)
       setFilteredProducts(result);
     }else{
       setFilteredProducts([])
     }
-  }, [category, context.allProduct,sortBy]);
+  }, [category, context.allProduct,sortBy,priceRange,setPriceRange]);
+
+  const shortProductByPriceRange=(products,price)=>{
+    const sortedPro = [...products]
+    return sortedPro.filter((item)=>item.price>=price[0] && item.price<=price[1])
+  }
 
   const getSortedProduct=(products,sortBy)=>{
     const sorted= [...products]

@@ -25,6 +25,26 @@ const Checkout = () => {
   const finalAmount = Math.round(
     totalSellingPrice + PLATFORM_CHARGE + SHIPPING_CHARGE
   );
+  const reduceTheCountofItem = async (itemid, quantity) => {
+    try {
+      const response = await axios.put(`${url}/api/product/updateProductQnty`,{productId:itemid,quantity}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (response.status === 200) {
+        setCartData(prevCart =>
+          prevCart
+            .map(item =>
+              item.productId._id === itemid
+                ? { ...item, ...response.data.data } 
+                : item
+            )
+        );      }
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      setError("Failed to fetch cart data. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const getCartData = async () => {
@@ -124,8 +144,10 @@ const Checkout = () => {
                 razorpay_signature: response.razorpay_signature,
                 cartData: cartData,
               },
+              
               { headers: { Authorization: `Bearer ${token}` } }
             );
+            reduceTheCountofItem(cartData[0].productId._id,cartData[0].quantity)
             alert("Payment Successful!");
           } catch (error) {
             console.error(

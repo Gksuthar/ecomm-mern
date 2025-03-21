@@ -58,7 +58,6 @@ const ProductItem = ({ item }) => {
         }
       } catch (error) {
         console.error("Error fetching cart data: " + error);
-        // toast.error("Failed to fetch cart data");
       } finally {
         setLoading(false);
       }

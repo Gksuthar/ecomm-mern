@@ -14,7 +14,7 @@ import Pagination from '@mui/material/Pagination';
 
 import axios from "axios";
 import toast, { Toaster } from 'react-hot-toast';
-const ProductItemListView = ({category,sortBy }) => {
+const ProductItemListView = ({category,sortBy ,priceRange,setPriceRange}) => {
    const [filteredProducts, setFilteredProducts] = useState([]);
     const context = useContext(MyContext);
     const url = context.AppUrl
@@ -34,12 +34,17 @@ const ProductItemListView = ({category,sortBy }) => {
             Array.isArray(category)?category.includes(pro.catName) : pro.catName === category
           );
           result = getSortedProduct(result,sortBy)
+          result = getShortbyPriceRange(result,priceRange)
           setFilteredProducts(result);
         }else{
           setFilteredProducts([])
         }
-      }, [category, context.allProduct,sortBy]);
+      }, [category, context.allProduct,sortBy,priceRange]);
 
+      const getShortbyPriceRange=(products,priceRange)=>{
+        const sorted = [...products]
+        return sorted.filter((item)=>item.price>=priceRange[0] && item.price<=priceRange[1])
+      }
       const getSortedProduct=(products,sortBy)=>{
         const sorted= [...products]
         switch(sortBy){
