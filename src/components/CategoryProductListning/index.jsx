@@ -13,7 +13,7 @@ import { CiShoppingCart } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
 
-const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange }) => {
+const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,selectedSubCategory }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [cartData, setCartData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,15 +32,28 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange }) =
   useEffect(() => {
     if (context.allProduct && category) {
       let result = context.allProduct.filter((pro) =>
-        Array.isArray(category)?category.includes(pro.catName) : pro.catName === category
+        Array.isArray(category) 
+          ? category.includes(pro.catName) 
+          : pro.catName === category
       );
-      result = getSortedProduct(result,sortBy)
-      result = shortProductByPriceRange(result,priceRange)
+
+      
+  
+      if (selectedSubCategory) {
+        result = result.filter((pro) => 
+          pro.subCat === selectedSubCategory
+        );
+      }
+  
+      result = getSortedProduct(result, sortBy);
+      
+      result = shortProductByPriceRange(result, priceRange);
+      
       setFilteredProducts(result);
-    }else{
-      setFilteredProducts([])
+    } else {
+      setFilteredProducts([]);
     }
-  }, [category, context.allProduct,sortBy,priceRange,setPriceRange]);
+  }, [category, selectedSubCategory, context.allProduct, sortBy, priceRange]);
 
   const shortProductByPriceRange=(products,price)=>{
     const sortedPro = [...products]

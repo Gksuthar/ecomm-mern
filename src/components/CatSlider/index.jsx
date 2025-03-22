@@ -68,7 +68,7 @@ const CategorySlider = () => {
                   alt="Smart Watch"
                   className="transition-all"
                 />
-                <h3 className="text-[16px] font-[500] mt-3">Smart Watch</h3>
+                <h3 className="text-[16px] font-[500] mt-3">Watch</h3>
               </div>
             </Link>
           </SwiperSlide>
@@ -81,7 +81,7 @@ const CategorySlider = () => {
                   alt="Wooden Chair"
                   className="transition-all"
                 />
-                <h3 className="text-[16px] font-[500] mt-3">Wooden Chair</h3>
+                <h3 className="text-[16px] font-[500] mt-3"> Chair</h3>
               </div>
             </Link>
           </SwiperSlide>
@@ -94,7 +94,7 @@ const CategorySlider = () => {
                   alt="Sneakers Shoes"
                   className="transition-all"
                 />
-                <h3 className="text-[16px] font-[500] mt-3">Sneakers Shoes</h3>
+                <h3 className="text-[16px] font-[500] mt-3"> Shoes</h3>
               </div>
             </Link>
           </SwiperSlide>

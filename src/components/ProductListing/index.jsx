@@ -12,6 +12,8 @@ import { useParams } from "react-router-dom";
 const ProductListing = () => {
   const { category } = useParams();
   const [selectedCategory, setSelectedCategory] = useState(category || []);
+  const [selectedSubCategory, setSelectedSubCategory] = useState();
+
   const [itmView, setItmView] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);
   const [sortBy, setSortBy] = useState("Relevance"); 
@@ -57,6 +59,8 @@ const ProductListing = () => {
               setSelectedCategory={setSelectedCategory}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
+              setSelectedSubCategory={setSelectedSubCategory}
+              selectedSubCategory={selectedSubCategory}
               
             />
           </div>
@@ -161,13 +165,15 @@ const ProductListing = () => {
                   sortBy={sortBy}
                   priceRange={priceRange}
                   setPriceRange={setPriceRange}
-                />
-              ) : (
-                <ProductItemListView
+                  selectedSubCategory={selectedSubCategory}
+                  />
+                ) : (
+                  <ProductItemListView
                   category={selectedCategory}
                   sortBy={sortBy}
                   priceRange={priceRange}
                   setPriceRange={setPriceRange}
+                  selectedSubCategory={selectedSubCategory}
                 />
               )}
             </div>

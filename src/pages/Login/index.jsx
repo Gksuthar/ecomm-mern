@@ -1,95 +1,59 @@
 import React, { useContext, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa6";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { MyContext } from "../../App";
 import axios from "axios";
 import { TailSpin } from "react-loader-spinner";
-
+import { Formik, Form, Field } from "formik"; 
 
 const Login = () => {
   const context = useContext(MyContext);
   const url = context.AppUrl;
   const navigate = useNavigate();
-  const [isShowPassword, setisShowPassword] = useState(false);
-  const [loading,setLoading] = useState(false)
-  const [formField, setFormField] = useState({
-    email: "",
-    password: "",
-  });
-  const onChangeHandle = (e) => {
-    setFormField({
-      ...formField,
-      [e.target.name]: e.target.value,
-    });
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const validate = (values) => {
+    const errors = {};
+    if (!values.email) {
+      errors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = "Email is invalid";
+    }
+
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    return errors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleForgetPassword = async (email) => {
+    if (!email) {
+      context.openAlertBox("error", "Please enter email");
+      return;
+    }
     try {
-      setLoading(true)
-      console.log(formField.email + "and" + formField.password);
-      if (formField.email==='') {
-        context.openAlertBox("error", "Please Enter email");
-      }
-      if (formField.password==='') {
-        context.openAlertBox("error", "Please Enter Password");
-      }
-      const response = await axios.post(`${url}/api/user/Login`, {
-        email: formField.email,
-        password: formField.password,
-      },);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("forgetPassword", "true");
+      const response = await axios.post(`${url}/api/user/forgetpassword`, {
+        email: email,
+      });
       if (response.status === 200) {
-        context.openAlertBox("success", "Login successfully");
-        context.setIsLogin(true)
-        localStorage.setItem('accessToken',response.data.data.accessToken)
-        localStorage.setItem('userId',response.data.data._id)
-        localStorage.setItem('refreshToken',response.data.data.refreshToken)
-        navigate("/");
-      } else {
-        console.log("You are not logging");
+        context.openAlertBox("success", "OTP sent");
+        navigate("/Verify");
       }
     } catch (error) {
-        if (error.response) {  
-            console.log("Error Message:", error.response.data.message);
-            context.openAlertBox('error',error.response.data.message)
-        } else if (error.request) {  
-            alert("No response received:", error.request);
-            context.openAlertBox('error',error.request)
-        } else {  
-            alert("Error:", error.message);
-            context.openAlertBox('error',error.message)
-        }
-    }finally{
-      setLoading(false)
+      console.error("Error:", error);
+      context.openAlertBox("error", "Failed to send OTP");
     }
-    
   };
-  const history = useNavigate();
-  const forgetPassword = async() => {
-    if (!formField.email) {
-      context.openAlertBox("error", "Please Enter Email");
-      return;
-    }else{
-     try {
-      localStorage.setItem('userEmail',formField.email)
-      let currentSituation = localStorage.setItem('forgetPassword','true')
-      const resposne = await axios.post(`${url}/api/user/forgetpassword`,{email:formField.email});
-      if (resposne.status===200 ) { 
-        context.openAlertBox("success", "Otp Send");
-        history("/Verify");
-      }
-      
-     } catch (error) {
-      console.error("Error :"+error)
-      toast('Form SuccessFully Submited.');
-     }
 
-    }
-  };
   return (
     <div className="section py-10">
       <div className="container">
@@ -97,74 +61,115 @@ const Login = () => {
           <h3 className="text-center !text-[18px] !font-[500] py-2 mb-4">
             Login to your account
           </h3>
-          <form action="" onSubmit={handleSubmit} className="w-full">
-            <div className="form-group w-full mb-5">
-              <TextField
-                id="standard-basic"
-                type="email"
-                value={formField.email}
-                name="email"
-                onChange={(e) => onChangeHandle(e)}
-                label="Email id"
-                variant="outlined"
-                className="w-full"
-              />
-            </div>
-            <div className="form-group w-full mb-5 relative">
-              <TextField
-                id="standard-basic"
-                type={`${isShowPassword === false ? "text" : "password"}`}
-                value={formField.password}
-                onChange={(e) => onChangeHandle(e)}
-                name="password"
-                label="Password"
-                variant="outlined"
-                className="w-full"
-              />
-              <Button
-                onClick={() => setisShowPassword(!isShowPassword)}
-                className="!absolute top-[10px] !text-black right-[10px] z-50 !w-[35px] !h-[35px] !min-w-[35px] opacity-75 "
-              >
-                {isShowPassword === true ? (
-                  <FaEye className="text-[20px]" />
-                ) : (
-                  <FaEyeSlash className="text-[20px]" />
-                )}
-              </Button>
-            </div>
-            <a
-              className="link cursor-pointer text-[14px] mb-1 font-[600]"
-              onClick={forgetPassword}
-            >
-              forget password
-            </a>
-            <div className="flex items-center w-full mt-3 btn-lg">
-              <Button className="btn-org w-full" type="submit">{loading ? (<TailSpin
-                          visible={true}
-                          height="23"
-                          width="23"
-                          color="#4fa94d"
-                          ariaLabel="tail-spin-loading"
-                          radius="1"
-                          wrapperStyle={{}}
-                          wrapperClass=""
-                        />) : ('Login') }</Button>
-            </div>
-            <p className="text-center mb-1">
-              Not registred?{" "}
-              <Link to="/Register" className=" link text-[14px] font-[600 ]">
-                Sign up
-              </Link>{" "}
-            </p>
-
-            <p className="text-center text-[12px] font-[500] mb-2 mt-4">
-              Or continue With Social Account{" "}
-            </p>
-            <Button className="flex gap-3 w-full !bg-[#f1f1f1] !btn-lg !text-black mt-2">
-              <FcGoogle className="text-[20px]" />
-              Login with Google
-            </Button>
-          </form>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validate={validate}
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                setLoading(true);
+                const response = await axios.post(`${url}/api/user/Login`, {
+                  email: values.email,
+                  password: values.password,
+                });
+                if (response.status === 200) {
+                  context.openAlertBox("success", "Login successfully");
+                  context.setIsLogin(true);
+                  localStorage.setItem("accessToken", response.data.data.accessToken);
+                  localStorage.setItem("userId", response.data.data._id);
+                  localStorage.setItem("refreshToken", response.data.data.refreshToken);
+                  navigate("/");
+                } else {
+                  console.log("You are not logging");
+                }
+              } catch (error) {
+                if (error.response) {
+                  context.openAlertBox("error", error.response.data.message);
+                } else if (error.request) {
+                  context.openAlertBox("error", "No response received");
+                } else {
+                  context.openAlertBox("error", error.message);
+                }
+              } finally {
+                setLoading(false);
+                setSubmitting(false);
+              }
+            }}
+          >
+            {({ errors, touched, values }) => (
+              <Form className="w-full">
+                <div className="form-group w-full mb-5">
+                  <Field
+                    as={TextField}
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="Email id"
+                    variant="outlined"
+                    className="w-full"
+                    error={touched.email && !!errors.email}
+                    helperText={touched.email && errors.email}
+                  />
+                </div>
+                <div className="form-group w-full mb-5 relative">
+                  <Field
+                    as={TextField}
+                    id="password"
+                    name="password"
+                    type={isShowPassword ? "text" : "password"}
+                    label="Password"
+                    variant="outlined"
+                    className="w-full"
+                    error={touched.password && !!errors.password}
+                    helperText={touched.password && errors.password}
+                  />
+                  <Button
+                    onClick={() => setIsShowPassword(!isShowPassword)}
+                    className="!absolute top-[10px] !text-black right-[10px] z-50 !w-[35px] !h-[35px] !min-w-[35px] opacity-75"
+                  >
+                    {isShowPassword ? <FaEye className="text-[20px]" /> : <FaEyeSlash className="text-[20px]" />}
+                  </Button>
+                </div>
+                <a
+                  className="link cursor-pointer text-[14px] mb-1 font-[600]"
+                  onClick={() => handleForgetPassword(values.email)}
+                >
+                  Forget password
+                </a>
+                <div className="flex items-center w-full mt-3 btn-lg">
+                  <Button type="submit" className="btn-org w-full" disabled={loading}>
+                    {loading ? (
+                      <TailSpin
+                        visible={true}
+                        height="23"
+                        width="23"
+                        color="#4fa94d"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                      />
+                    ) : (
+                      "Login"
+                    )}
+                  </Button>
+                </div>
+                <p className="text-center mb-1">
+                  Not registered?{" "}
+                  <Link to="/Register" className="link text-[14px] font-[600]">
+                    Sign up
+                  </Link>
+                </p>
+                <p className="text-center text-[12px] font-[500] mb-2 mt-4">
+                  Or continue with Social Account
+                </p>
+                <Button className="flex gap-3 w-full !bg-[#f1f1f1] !btn-lg !text-black mt-2">
+                  <FcGoogle className="text-[20px]" />
+                  Login with Google
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>

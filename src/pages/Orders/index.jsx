@@ -11,6 +11,7 @@ import { MyContext } from "../../App";
 import { GoDownload } from "react-icons/go";
 import useFetch from "../../DataFetch/getDataContext.jsx";
 import { InfinitySpin } from "react-loader-spinner";
+import Pagination from "@mui/material/Pagination";
 
 const Orders = () => {
   const [isOpenProductDetails, setIsOpenProductDetails] = useState(false);
@@ -19,13 +20,23 @@ const Orders = () => {
 
   const [orders, setOrders] = useState([]);
   const [perticulerOrder, setPerticulerOrder] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemPerPage = 4;
+  const TotalItem = Math.ceil(orders.length / itemPerPage);
 
+  const startIndex = (currentPage - 1) * itemPerPage;
+  const endIndex = startIndex + itemPerPage;
+  const currentOrders = orders.slice(startIndex, endIndex);
   const handleOpenProductDetails = (id) => {
     const order = orders.find((item) => item._id === id);
     console.log(order);
 
     setPerticulerOrder(order);
     setIsOpenProductDetails(true);
+  };
+
+  const ChangeValue = (event, value) => {
+    setCurrentPage(value);
   };
 
   const handleCloseProductDetails = () => {
@@ -51,13 +62,12 @@ const Orders = () => {
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
-
-      <InfinitySpin
-        visible={true}
-        width="200"
-        color="#4fa94d"
-        ariaLabel="infinity-spin-loading"
-      />
+        <InfinitySpin
+          visible={true}
+          width="200"
+          color="#4fa94d"
+          ariaLabel="infinity-spin-loading"
+        />
       </div>
     );
   if (error) return <div>Error: {error.message}</div>;
@@ -89,7 +99,7 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((item, indx) => (
+                {currentOrders.map((item, indx) => (
                   <tr key={indx} className="bg-white border-b hover:bg-gray-50">
                     <td className="px-6 py-4">{item.orderId}</td>
                     <td className="px-6 py-4">{item.paymentId}</td>
@@ -145,42 +155,46 @@ const Orders = () => {
         </DialogTitle>
         <DialogContent>
           {perticulerOrder ? (
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3">Product ID</th>
-                  <th className="px-6 py-3">Product Title</th>
-                  <th className="px-6 py-3">Image</th>
-                  <th className="px-6 py-3">Quantity</th>
-                  <th className="px-6 py-3">Price</th>
-                  <th className="px-6 py-3">SubTotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">{perticulerOrder.productId._id}</td>
-                  <td className="px-6 py-4">
-                    {perticulerOrder.productId.name.substring(0, 50)}...
-                  </td>
-                  <td className="px-6 py-4">
-                    <img
-                      src={perticulerOrder.productId.images[0]}
-                      alt="Product"
-                      className="w-20 h-20"
-                    />
-                  </td>
-                  <td className="px-6 py-4">
-                    {perticulerOrder.quantity || 1}{" "}
-                  </td>
-                  <td className="px-6 py-4">
-                    {perticulerOrder.productId.price}
-                  </td>
-                  <td className="px-6 py-4">
-                    {perticulerOrder.productId.price * 1}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <>
+              <table className="w-full text-sm text-left text-gray-500">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3">Product ID</th>
+                    <th className="px-6 py-3">Product Title</th>
+                    <th className="px-6 py-3">Image</th>
+                    <th className="px-6 py-3">Quantity</th>
+                    <th className="px-6 py-3">Price</th>
+                    <th className="px-6 py-3">SubTotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-white border-b hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      {perticulerOrder.productId._id}
+                    </td>
+                    <td className="px-6 py-4">
+                      {perticulerOrder.productId.name.substring(0, 50)}...
+                    </td>
+                    <td className="px-6 py-4">
+                      <img
+                        src={perticulerOrder.productId.images[0]}
+                        alt="Product"
+                        className="w-20 h-20"
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      {perticulerOrder.quantity || 1}{" "}
+                    </td>
+                    <td className="px-6 py-4">
+                      {perticulerOrder.productId.price}
+                    </td>
+                    <td className="px-6 py-4">
+                      {perticulerOrder.productId.price * 1}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </>
           ) : (
             <p>Loading product details...</p>
           )}
@@ -191,6 +205,9 @@ const Orders = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <div className="flex justify-end">
+        <Pagination count={TotalItem} onChange={ChangeValue} />
+      </div>
     </div>
   );
 };
