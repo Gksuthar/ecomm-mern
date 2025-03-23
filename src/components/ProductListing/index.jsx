@@ -2,22 +2,25 @@ import React, { useState } from "react";
 import SidebarListning from "../SidebarListning";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, Menu, MenuItem, Drawer } from "@mui/material";
 import { IoGrid } from "react-icons/io5";
-import { IoMdMenu } from "react-icons/io";
+import { IoMdMenu } from "react-icons/io"; // Changed to IoMdMenu as per your example
 import ProductItemListView from "../ProductListingListView";
 import CategoryProductListning from "../CategoryProductListning";
 import { useParams } from "react-router-dom";
+import MobileNav from "../Navigation/MobileNav";
+import { useContext } from "react";
+import { MyContext } from "../../App";
 
 const ProductListing = () => {
   const { category } = useParams();
+  const context = useContext(MyContext);
   const [selectedCategory, setSelectedCategory] = useState(category || []);
   const [selectedSubCategory, setSelectedSubCategory] = useState();
-
   const [itmView, setItmView] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [sortBy, setSortBy] = useState("Relevance"); 
-  const [priceRange, setPriceRange] = useState([100, 50000])
+  const [sortBy, setSortBy] = useState("Relevance");
+  const [priceRange, setPriceRange] = useState([100, 50000]);
 
   const open = Boolean(anchorEl);
 
@@ -53,7 +56,7 @@ const ProductListing = () => {
         </Breadcrumbs>
 
         <div className="bg-white p-4 rounded-md shadow-md flex flex-col md:flex-row gap-4">
-          <div className="w-full md:w-[20%] bg-white border-r border-gray-300 min-h-[80vh] p-3">
+          <div className="hidden sm:block w-full md:w-[20%] bg-white border-r border-gray-300 min-h-[80vh] p-3">
             <SidebarListning
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
@@ -61,7 +64,6 @@ const ProductListing = () => {
               setPriceRange={setPriceRange}
               setSelectedSubCategory={setSelectedSubCategory}
               selectedSubCategory={selectedSubCategory}
-              
             />
           </div>
 
@@ -166,9 +168,9 @@ const ProductListing = () => {
                   priceRange={priceRange}
                   setPriceRange={setPriceRange}
                   selectedSubCategory={selectedSubCategory}
-                  />
-                ) : (
-                  <ProductItemListView
+                />
+              ) : (
+                <ProductItemListView
                   category={selectedCategory}
                   sortBy={sortBy}
                   priceRange={priceRange}
@@ -179,6 +181,24 @@ const ProductListing = () => {
             </div>
           </div>
         </div>
+
+
+        <Drawer
+          anchor="bottom"
+          open={context.drawerOpen}
+          onClose={context.toggleDrawer(false)}
+          sx={{ "& .MuiDrawer-paper": { height: "70vh", padding: "10px" } }}
+          >
+          <SidebarListning
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            setSelectedSubCategory={setSelectedSubCategory}
+            selectedSubCategory={selectedSubCategory}
+            />
+        </Drawer>
+
       </div>
     </section>
   );

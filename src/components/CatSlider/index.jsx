@@ -87,7 +87,7 @@ const CategorySlider = () => {
           </SwiperSlide>
 
           <SwiperSlide>
-            <Link to="/productListning/Shoes">
+            <Link to="/productListning/Footwear">
               <div className="item py-3 sm:py-7 px-3 bg-white rounded-sm text-center flex flex-col items-center justify-center">
                 <img
                   src="https://demos.codezeel.com/prestashop/PRS21/PRS210502/modules/cz_categoryimagelist/views/img/16-cz_categoryimagelist.jpg"

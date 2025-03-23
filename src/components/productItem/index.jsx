@@ -12,10 +12,12 @@ import toast from "react-hot-toast";
 import { CiShoppingCart } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ProductItem = ({ item }) => {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setLoading] = useState(false);
+  const [isreloadingIcon, setReloadingIcons] = useState(false);
   const [cartData, setCartData] = useState([]);
   const context = useContext(MyContext);
   const url = context.AppUrl;
@@ -29,8 +31,8 @@ const ProductItem = ({ item }) => {
   }, [item]);
 
   const addToCart = async (id) => {
+    setReloadingIcons(true);
     try {
-      setLoading(true);
       const response = await axios.post(
         `${url}/api/cart/create`,
         { productId: id, quantity: quantity },
@@ -38,11 +40,15 @@ const ProductItem = ({ item }) => {
       );
       if (response.status === 200) {
         toast.success(response.data.message);
+        setCartData((prevData) => [
+          ...prevData,
+          { productId: { _id: id }, quantity: quantity },
+        ]);
       }
     } catch (error) {
       toast.error("Failed to add to cart");
     } finally {
-      setLoading(false);
+      setReloadingIcons(false);
     }
   };
 
@@ -50,9 +56,12 @@ const ProductItem = ({ item }) => {
     const getCartData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`https://mernecommbackend-d6vr.onrender.com/api/cart/get`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          `https://mernecommbackend-d6vr.onrender.com/api/cart/get`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (response.status === 200) {
           setCartData(response.data.data);
         }
@@ -63,7 +72,7 @@ const ProductItem = ({ item }) => {
       }
     };
     getCartData();
-  }, [url, token,setCartData]);
+  }, [url, token, setCartData]);
 
   const isProductInCart = cartData.some(
     (cartItem) => cartItem?.productId?._id === item?._id
@@ -74,7 +83,6 @@ const ProductItem = ({ item }) => {
   )?.quantity;
 
   const updateQty = async (id, qty) => {
-    setLoading(true);
     try {
       const response = await axios.put(
         `${url}/api/cart/update-cart`,
@@ -93,7 +101,6 @@ const ProductItem = ({ item }) => {
     } catch (error) {
       toast.error("Error updating quantity");
     } finally {
-      setLoading(false);
     }
   };
 
@@ -203,29 +210,37 @@ const ProductItem = ({ item }) => {
         </div>
         {isProductInCart && productQuantityInCart > 0 ? (
           <div className="flex items-center mt-2 w-full border border-gray-300 rounded-full overflow-hidden">
-            <button
+            <Button
               onClick={() => updateQty(item?._id, productQuantityInCart - 1)}
-              className="bg-gray-200 text-gray-700 w-10 h-10 flex items-center justify-center"
+              className="!bg-gray-200 !text-gray-700 !w-10 !h-10 !flex items-center justify-center"
             >
               <CiCircleMinus className="text-xl" />
-            </button>
+            </Button>
             <span className="flex-1 text-center text-lg">
               {productQuantityInCart}
             </span>
-            <button
+            <Button
               onClick={() => updateQty(item?._id, productQuantityInCart + 1)}
-              className="bg-gray-900 text-white w-10 h-10 flex items-center justify-center"
+              className="!bg-gray-900 !text-white !w-10 !h-10 !flex items-center justify-center"
             >
               <CiCirclePlus className="text-xl" />
-            </button>
+            </Button>
           </div>
         ) : (
           <Button
             onClick={() => addToCart(item._id)}
             className="btn-org sm:w-full !mt-2 flex gap-1 sm:gap-3"
           >
-            <CiShoppingCart className="text-xl sm:text-2xl" />
-            Add to Cart
+            {isreloadingIcon ? (
+              <>
+                <CircularProgress size={20} color="inherit" />
+              </>
+            ) : (
+              <>
+                <CiShoppingCart className="text-xl sm:text-2xl" />
+                Add to Cart
+              </>
+            )}
           </Button>
         )}
       </div>

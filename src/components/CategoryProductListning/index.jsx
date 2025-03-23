@@ -307,7 +307,7 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
                     className="btn-org sm:w-full !mt-2 flex gap-1 sm:gap-3"
                   >
                     <CiShoppingCart className="text-xl sm:text-2xl" />
-                    Add to Cart
+                    Add Cart
                   </Button>
                 )}
               </div>
