@@ -30,21 +30,21 @@ import "swiper/css";
 import axios from "axios";
 import { jsPDF } from "jspdf";
 import "react-loading-skeleton/dist/skeleton.css";
-import WhichList from "./components/whichlist"; // Assuming this is correct, consider renaming to Wishlist for clarity
+import WhichList from "./components/whichlist"; 
 
 const MyContext = createContext();
 
 function App() {
-  const navigate = useNavigate(); // Added for logout navigation
+  const navigate = useNavigate(); 
   const AppUrl = "https://mernecommbackend-d6vr.onrender.com";
   const [openCartPanel, setOpenCartPanel] = useState(false);
   const [openProductDetailsModal, setOpenProductDetailsModal] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-  const [userProfile, setUserProfile] = useState(null); // Fixed variable name casing
+  const [userProfile, setUserProfile] = useState(null); 
   const [allProduct, setAllProduct] = useState([]);
   const [allFeatureProduct, setAllFeatureProduct] = useState([]);
-  const [data, setData] = useState(null); // Initialized as null for clarity
-  const [drawerOpen, setDrawerOpen] = useState(false); // Drawer state for filters
+  const [data, setData] = useState(null); 
+  const [drawerOpen, setDrawerOpen] = useState(false); 
   const [cartLen, setCartLen] = useState(0);
   const [openCategoryId, setOpenCategoryId] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
@@ -104,9 +104,7 @@ function App() {
     if (activeSubCategory) {
       setThirdSubCategory(activeSubCategory.children || []);
     }
-  }, [activeSubCategory]); // Fixed dependency
-
-  // Fetch user details on login state change
+  }, [activeSubCategory]); 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -119,7 +117,10 @@ function App() {
               "Content-Type": "application/json",
             },
           });
-          setUserProfile(response.data.data);
+          if (response.status===200) { 
+            setUserProfile(response.data.data);
+          }
+
         } catch (error) {
           console.error("User details fetch error:", error);
         }
@@ -131,7 +132,6 @@ function App() {
     }
   }, [isLogin]);
 
-  // Fetch categories
   useEffect(() => {
     const fetchCategory = async () => {
       try {

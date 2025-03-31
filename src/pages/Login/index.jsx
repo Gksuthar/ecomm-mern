@@ -75,8 +75,8 @@ const Login = () => {
                   password: values.password,
                 });
                 if (response.status === 200) {
-                  context.openAlertBox("success", "Login successfully");
                   context.setIsLogin(true);
+                  context.openAlertBox("success", "Login successfully");
                   localStorage.setItem("accessToken", response.data.data.accessToken);
                   localStorage.setItem("userId", response.data.data._id);
                   localStorage.setItem("refreshToken", response.data.data.refreshToken);

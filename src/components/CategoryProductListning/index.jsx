@@ -12,6 +12,7 @@ import Pagination from "@mui/material/Pagination";
 import { CiShoppingCart } from "react-icons/ci";
 import { CiCirclePlus } from "react-icons/ci";
 import { CiCircleMinus } from "react-icons/ci";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,selectedSubCategory }) => {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -93,7 +94,6 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
         }
       } catch (error) {
         console.error("Error fetching cart data: " + error.message);
-        toast.error("Failed to fetch cart data");
       } finally {
         setCartLoading(false);
       }
@@ -110,7 +110,6 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
-        toast.success(response.data.message);
         setCartData([...cartData, { productId: { _id: id }, quantity }]);
       }
     } catch (error) {
@@ -129,7 +128,6 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.status === 200) {
-        toast.success("Quantity updated");
         setCartData((prevCart) =>
           prevCart.map((cartItem) =>
             cartItem.productId._id === id ? { ...cartItem, quantity: qty } : cartItem
@@ -199,26 +197,6 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
           )?.quantity;
           const isLoading = loadingStates[product._id] || false;
 
-          if (isLoading) {
-            return (
-              <div
-                key={product._id}
-                className="productItem rounded-sm border-1 border-[rgba(0,0,0,0.1)] border border-gray-300 shadow-md animate-pulse"
-              >
-                <div className="imgWrapper w-full rounded-md relative shadow-sm h-[220px] bg-gray-300"></div>
-                <div className="info p-3 py-3 bg-[#ecebeb]">
-                  <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-                  <div className="h-5 bg-gray-300 rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-gray-300 rounded w-1/3 mb-2"></div>
-                  <div className="flex items-center gap-4">
-                    <div className="h-4 bg-gray-300 rounded w-1/4"></div>
-                    <div className="h-4 bg-gray-300 rounded w-1/4"></div>
-                  </div>
-                  <div className="h-10 bg-gray-300 rounded-full mt-2"></div>
-                </div>
-              </div>
-            );
-          }
 
           return (
             <div
@@ -306,8 +284,17 @@ const CategoryProductListning = ({ category,sortBy,priceRange,setPriceRange,sele
                     onClick={() => addToCart(product._id)}
                     className="btn-org sm:w-full !mt-2 flex gap-1 sm:gap-3"
                   >
-                    <CiShoppingCart className="text-xl sm:text-2xl" />
-                    Add Cart
+                                {isLoading ? (
+                                  <>
+                                    <CircularProgress size={20} color="inherit" />
+                                  </>
+                                ) : (
+                                  <>
+                                    <CiShoppingCart className="hidden sm:block text-[12px] sm:text-2xl" />
+                                    Add to Cart
+                                  </>
+                                )}
+                    
                   </Button>
                 )}
               </div>
